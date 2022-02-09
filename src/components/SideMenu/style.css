@@ -1,0 +1,26 @@
+.sidemenu-field {
+  position: absolute;
+  width: 280px;
+}
+
+.pro-sidebar > .pro-sidebar-inner {
+  background: #212226;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.close-menu-btn:hover {
+  cursor: pointer;
+}
+
+.pro-inner-item:hover .pro-icon-wrapper {
+  color: #EA8916;
+}
+
+.pro-inner-item:hover .pro-item-content {
+  color: #EA8916;
+}

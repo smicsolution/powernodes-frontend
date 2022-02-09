@@ -1,0 +1,21 @@
+.brand-logo {
+  height: 2rem;
+}
+
+.header-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.header-bar {
+  border-bottom: 1px solid #EA8916;
+  background-color: #18181B;
+}
+
+.ant-affix {
+  z-index: 9999;
+}

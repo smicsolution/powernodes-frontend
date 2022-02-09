@@ -1,0 +1,214 @@
+@import '~antd/dist/antd.less';
+@import "~bootstrap/dist/css/bootstrap.css";
+ 
+ /* Custom scrollbar */
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #EA8916;
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #eb962e;
+  }
+
+* {
+  font-family: Rubik; 
+  font-style: normal;
+}
+
+.app {
+  position: relative;
+  background-color: #18181B;
+  background-image: url(./background.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right;
+  color: white;
+  min-height: 100vh;
+}
+
+.content {
+  padding: 1.5rem 1.5rem 1.5rem 100px;
+}
+
+.cl-bright {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cl-orange {
+  color: #EA8916;
+}
+
+.cl-orange-gd {
+  background: -webkit-linear-gradient(#EA8916 0%, #EB6A21 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cl-black {
+  color: #12151F;
+}
+
+.cl-gray {
+  color: #4A4C53;
+}
+
+.cl-wind {
+  color: #6DDAFC;
+}
+
+.cl-hydro {
+  color: #5873FF;
+}
+
+.cl-solar {
+  color: #E8CA2F;
+}
+
+.cl-nuclear {
+  color: #25E384;
+}
+
+.cl-green {
+  color: #6ACD48;
+}
+
+.cl-green-gd {
+  background: -webkit-linear-gradient(#6ACD48 0%, #25B84E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cl-fantom-gd {
+  background: -webkit-linear-gradient(#13B5EC 100%, #189DCA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cl-white-80 {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cl-white-60 {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cl-white-40 {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.cl-white-gd {
+  background: -webkit-linear-gradient(#FFFFFF 100%, #FFD9B4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.navbar-toggler:focus {
+  border: 2px solid #EA7C16;
+  box-shadow: none;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.w-fit-content {
+  width: fit-content;
+}
+
+.dark-btn {
+  background-color: #212226;
+  border: 1px solid rgba(234, 137, 22, 0.05);
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px -3px 16px rgba(234, 137, 22, 0.17);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.dark-btn:hover {
+  border: 1px solid #EA8916;
+}
+
+.dark-btn-sm {
+  background-color: #212226;
+  border: 1px solid rgba(234, 137, 22, 0.05);
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px -3px 16px rgba(234, 137, 22, 0.17);
+  border-radius: 0.5rem;
+  padding: 0.2rem 1rem;
+}
+
+.dark-btn-sm:hover {
+  border: 1px solid #EA8916;
+}
+
+.orange-btn {
+  background: linear-gradient(90deg, #EA8916 0%, #EA7C16 100%), #EA8916;
+  border: 1px solid rgba(240, 156, 56, 0.7);
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), -6px -4px 16px rgba(234, 137, 22, 0.4), inset 9px 9px 16px rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.orange-btn:hover {
+  border: 1px solid lightgray;
+}
+
+.white-btn {
+  background: #FFFFFF;
+  border: 1px solid rgba(234, 137, 22, 0.05);
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px #BF5316, -9px -9px 16px rgba(234, 137, 22, 0.2), inset 0px -3px 16px rgba(234, 137, 22, 0.4);
+  border-radius: 0.5rem;
+}
+
+.white-btn:hover {
+  background: linear-gradient(89.97deg, #EA8916 0.03%, #EB6A21 94.43%);
+}
+
+.white-btn:hover span {
+  background: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-preimg {
+  height: 1.2rem;
+  width: auto;
+}
+
+.icon-size {
+  height: 1.4rem!important;
+  width: auto;
+}
+
+.item-flip {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}

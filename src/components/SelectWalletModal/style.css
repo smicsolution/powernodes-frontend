@@ -1,0 +1,39 @@
+.fade {
+  background-color: transparent;
+}
+
+.modal {
+  top: 5rem;
+}
+
+.modal-dialog {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: transparent;
+  width: 50vw;
+  max-width: 900px;
+  min-width: 300px;
+}
+
+.select-wallet {
+  background: #212226;
+  box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.7);
+  border-radius: 0.5rem;
+  padding: 1rem 0;
+}
+
+.wallet-img {
+  height: 4rem;
+  width: auto;
+}
+
+.right-border {
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.wallet-item {
+  cursor: pointer;
+}

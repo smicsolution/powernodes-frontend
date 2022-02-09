@@ -1,0 +1,183 @@
+.dasboard-card {
+  background: #212226;
+  box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 992px) {
+  .total-field,
+  .fantom-price-field {
+    padding: 0 0.5rem 0 0!important;
+  }
+
+  .power-price-field {
+    padding: 0 0 0 0.5rem!important;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .total-field,
+  .fantom-price-field,
+  .power-price-field {
+    padding: 0!important;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #292A2F!important;
+}
+
+.vertical-border {
+  border-left: 1px solid #292A2F!important;
+}
+
+.node-card {
+  background: #212226;
+  box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.nuclear-card {
+  background: #212226;
+  border: 1px solid rgba(37, 227, 132, 0.1);
+  box-sizing: border-box;
+  box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.solar-card {
+  background: #212226;
+  border: 1px solid rgba(232, 224, 47, 0.1);
+  box-sizing: border-box;
+  box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.hydro-card {
+  background: #212226;
+  border: 1px solid rgba(88, 115, 255, 0.1);
+  box-sizing: border-box;
+  box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.wind-card {
+  background: #212226;
+  border: 1px solid rgba(109, 218, 252, 0.1);
+  box-sizing: border-box;
+  box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.wind-card:hover {
+  background: linear-gradient(165.39deg, #212226 9.14%, #183640 94.36%);
+  border: 1px solid #6DDAFC;
+  box-shadow: -9px -9px 16px rgba(184, 184, 184, 0.08), 9px 9px 16px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.hydro-card:hover {
+  background: linear-gradient(165.39deg, #212226 9.14%, #131a3a 94.36%);
+  border: 1px solid #5873FF;
+  box-shadow: -9px -9px 16px rgba(184, 184, 184, 0.08), 9px 9px 16px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.solar-card:hover {
+  background: linear-gradient(165.39deg, #212226 9.14%, #473e0e 94.36%);
+  border: 1px solid #E8CA2F;
+  box-shadow: -9px -9px 16px rgba(184, 184, 184, 0.08), 9px 9px 16px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.nuclear-card:hover {
+  background: linear-gradient(165.39deg, #212226 9.14%, #0b4428 94.36%);
+  border: 1px solid #25E384;
+  box-shadow: -9px -9px 16px rgba(184, 184, 184, 0.08), 9px 9px 16px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 992px) {
+  .node-item-field {
+    padding: 0!important;
+  }
+}
+
+.node-img-size {
+  width: 90%;
+  height: auto;
+}
+
+.nodename_input {
+  border: 1px solid rgba(234, 137, 22, 0.5);
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  padding: 0.5rem 1.2rem;
+  color: #EA8916;
+  width: 100%;
+}
+
+.nodename_input:focus {
+  outline: none;
+}
+
+.reward-field {
+  background: linear-gradient(89.97deg, #EA8916 0.03%, #EB6A21 94.43%);
+  box-shadow: -9px -9px 16px rgba(235, 134, 24, 0.2), 9px 9px 16px rgba(236, 106, 33, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: 100%;
+  height: 230px;
+}
+
+.right-border {
+  border-right: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.node-field {
+  height: fit-content;
+}
+
+@media only screen and (max-width: 768px) {
+  .node-field {
+    padding: 0!important;
+  }
+}
+
+.node-list-field {
+  background: #212226;
+  border-radius: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+  .node-list-field {
+    height: fit-content!important;
+  }
+}
+
+.node-list {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: max-content;
+}
+
+@media only screen and (max-width: 768px) {
+  .node-list {
+    height: 450px!important;
+  }
+}
