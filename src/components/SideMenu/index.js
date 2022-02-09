@@ -52,7 +52,7 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header }) => {
           <p className='mb-0'>{menuCollapse ? "" : "DASHBOARD"}</p>
           <div className='close-menu-btn fs-5' onClick={menuIconClick}>
             {menuCollapse ? (
-              <TiThMenu />
+              null
             ) : (
               <RiCloseLine />
             )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RiArrowRightUpLine } from 'react-icons/ri'
 import { IoTrashBinSharp } from 'react-icons/io5'
 import { useResizeDetector } from 'react-resize-detector'
@@ -6,6 +6,114 @@ import { useResizeDetector } from 'react-resize-detector'
 import './style.css'
 
 import NodeItem from '../../components/NodeItem';
+
+const nodeArray = [
+  {
+    type: "Nuclear",
+    name: "Nuclear Node",
+    rewards: 3.87
+  },
+  {
+    type: "Wind",
+    name: "Wind Node",
+    rewards: 3.87
+  },
+  {
+    type: "Wind",
+    name: "Wind Node",
+    rewards: 3.87
+  },
+  {
+    type: "Solar",
+    name: "Solar Node",
+    rewards: 3.87
+  },
+  {
+    type: "Hydro",
+    name: "Hydro Node",
+    rewards: 3.87
+  },
+  {
+    type: "Hydro",
+    name: "Hydro Node",
+    rewards: 3.87
+  },
+  {
+    type: "Nuclear",
+    name: "Nuclear Node",
+    rewards: 3.87
+  },
+  {
+    type: "Nuclear",
+    name: "Nuclear Node",
+    rewards: 3.87
+  },
+  {
+    type: "Wind",
+    name: "Wind Node",
+    rewards: 3.87
+  },
+  {
+    type: "Wind",
+    name: "Wind Node",
+    rewards: 3.87
+  },
+  {
+    type: "Solar",
+    name: "Solar Node",
+    rewards: 3.87
+  },
+  {
+    type: "Hydro",
+    name: "Hydro Node",
+    rewards: 3.87
+  },
+  {
+    type: "Hydro",
+    name: "Hydro Node",
+    rewards: 3.87
+  },
+  {
+    type: "Nuclear",
+    name: "Nuclear Node",
+    rewards: 3.87
+  },
+  {
+    type: "Nuclear",
+    name: "Nuclear Node",
+    rewards: 3.87
+  },
+  {
+    type: "Wind",
+    name: "Wind Node",
+    rewards: 3.87
+  },
+  {
+    type: "Wind",
+    name: "Wind Node",
+    rewards: 3.87
+  },
+  {
+    type: "Solar",
+    name: "Solar Node",
+    rewards: 3.87
+  },
+  {
+    type: "Hydro",
+    name: "Hydro Node",
+    rewards: 3.87
+  },
+  {
+    type: "Hydro",
+    name: "Hydro Node",
+    rewards: 3.87
+  },
+  {
+    type: "Nuclear",
+    name: "Nuclear Node",
+    rewards: 3.87
+  }
+]
 
 const Dashboard = () => {
   const { width, height, ref } = useResizeDetector();
@@ -16,7 +124,19 @@ const Dashboard = () => {
     background: "linear-gradient(165.39deg, #212226 9.14%, #0b4428 94.36%)",
     border: "1px solid #25E384",
     boxShadow: '-9px -9px 16px rgba(184, 184, 184, 0.08), 9px 9px 16px rgba(0, 0, 0, 0.4)'
-  })
+  });
+  const [nodeLeftField, setLeftField] = useState("ps-0 pe-2");
+  const [nodeRightField, setRightField] = useState("pe-0 ps-2");
+
+  useEffect(() => {
+    if (width > 430) {
+      setLeftField("ps-0 pe-2");
+      setRightField("pe-0 ps-2");
+    } else {
+      setLeftField("p-0");
+      setRightField("p-0");
+    }
+  }, [width])
 
   const onSelectNode = e => {
     setSelectedNode(e.target.id);
@@ -168,113 +288,227 @@ const Dashboard = () => {
               <span className="cl-gray">Selected: <span className={`${nodeTypeColor}`}>{selectedNode}</span></span>
             </div>
 
-            <div className="row mx-0 mt-2">
-              <div className="col-lg-6 my-2 text-center node-item-field ps-0 pe-2">
-                <div
-                  className="nuclear-card"
-                  style={selectedNode === "Nuclear" ? nodeStyle : null}
-                  id='Nuclear'
-                  onClick={onSelectNode}
-                >
-                  <div className="d-flex justify-content-between align-items-center" id='Nuclear'>
-                    <span className="cl-nuclear fs-5" id='Nuclear'>Nuclear</span>
-                    <div className='d-flex align-items-center' id='Nuclear'>
-                      <span className="cl-nuclear fs-5 me-1" id='Nuclear'>50</span>
-                      <img src="assets/img/icons/nuclear_power.png" alt="nuclear_power" className='icon-size' id='Nuclear' />
+            {width > 430 ? (
+              <div>
+                <div className="row mx-0 mt-2">
+                  <div className={`col-6 my-2 text-center ${nodeLeftField}`}>
+                    <div
+                      className="nuclear-card"
+                      style={selectedNode === "Nuclear" ? nodeStyle : null}
+                      id='Nuclear'
+                      onClick={onSelectNode}
+                    >
+                      <div className="d-flex justify-content-between align-items-center" id='Nuclear'>
+                        <span className="cl-nuclear fs-5" id='Nuclear'>Nuclear</span>
+                        <div className='d-flex align-items-center' id='Nuclear'>
+                          <span className="cl-nuclear fs-5 me-1" id='Nuclear'>50</span>
+                          <img src="assets/img/icons/nuclear_power.png" alt="nuclear_power" className='icon-size' id='Nuclear' />
+                        </div>
+                      </div>
+                      <img src="assets/img/node/nuclear.png" alt="nuclear" className='node-img-size' id='Nuclear' />
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Nuclear'>
+                        <span className="cl-gray fw-bold" id='Nuclear'>Tokens / Day</span>
+                        <span className="cl-nuclear fs-5" id='Nuclear'>0.7</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Nuclear'>
+                        <span className="cl-gray fw-bold" id='Nuclear'>ROI</span>
+                        <span className="cl-nuclear fs-5" id='Nuclear'>114 Days</span>
+                      </div>
                     </div>
                   </div>
-                  <img src="assets/img/node/nuclear.png" alt="nuclear" className='node-img-size' id='Nuclear' />
-                  <div className="d-flex justify-content-between align-items-center border-top" id='Nuclear'>
-                    <span className="cl-gray fw-bold" id='Nuclear'>Tokens / Day</span>
-                    <span className="cl-nuclear fs-5" id='Nuclear'>0.7</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-top" id='Nuclear'>
-                    <span className="cl-gray fw-bold" id='Nuclear'>ROI</span>
-                    <span className="cl-nuclear fs-5" id='Nuclear'>114 Days</span>
-                  </div>
-                </div>
-              </div>
 
-              <div className="col-lg-6 my-2 text-center node-item-field pe-0 ps-2">
-                <div
-                  className="solar-card"
-                  style={selectedNode === "Solar" ? nodeStyle : null}
-                  id='Solar'
-                  onClick={onSelectNode}
-                >
-                  <div className="d-flex justify-content-between align-items-center" id='Solar'>
-                    <span className="cl-solar fs-5" id='Solar'>Solar</span>
-                    <div className='d-flex align-items-center' id='Solar'>
-                      <span className="cl-solar fs-5 me-1" id='Solar'>10</span>
-                      <img src="assets/img/icons/solar_power.png" alt="solar_power" className='icon-size' id='Solar' />
+                  <div className={`col-6 my-2 text-center ${nodeRightField}`}>
+                    <div
+                      className="solar-card"
+                      style={selectedNode === "Solar" ? nodeStyle : null}
+                      id='Solar'
+                      onClick={onSelectNode}
+                    >
+                      <div className="d-flex justify-content-between align-items-center" id='Solar'>
+                        <span className="cl-solar fs-5" id='Solar'>Solar</span>
+                        <div className='d-flex align-items-center' id='Solar'>
+                          <span className="cl-solar fs-5 me-1" id='Solar'>10</span>
+                          <img src="assets/img/icons/solar_power.png" alt="solar_power" className='icon-size' id='Solar' />
+                        </div>
+                      </div>
+                      <img src="assets/img/node/solar.png" alt="solar" className='node-img-size' id='Solar' />
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Solar'>
+                        <span className="cl-gray fw-bold" id='Solar'>Tokens / Day</span>
+                        <span className="cl-solar fs-5" id='Solar'>0.1</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Solar'>
+                        <span className="cl-gray fw-bold" id='Solar'>ROI</span>
+                        <span className="cl-solar fs-5" id='Solar'>114 Days</span>
+                      </div>
                     </div>
                   </div>
-                  <img src="assets/img/node/solar.png" alt="solar" className='node-img-size' id='Solar' />
-                  <div className="d-flex justify-content-between align-items-center border-top" id='Solar'>
-                    <span className="cl-gray fw-bold" id='Solar'>Tokens / Day</span>
-                    <span className="cl-solar fs-5" id='Solar'>0.1</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-top" id='Solar'>
-                    <span className="cl-gray fw-bold" id='Solar'>ROI</span>
-                    <span className="cl-solar fs-5" id='Solar'>114 Days</span>
-                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="row mx-0">
-              <div className="col-lg-6 my-2 text-center node-item-field ps-0 pe-2">
-                <div
-                  className="hydro-card"
-                  style={selectedNode === "Hydro" ? nodeStyle : null}
-                  id='Hydro'
-                  onClick={onSelectNode}
-                >
-                  <div className="d-flex justify-content-between align-items-center" id='Hydro'>
-                    <span className="cl-hydro fs-5" id='Hydro'>Hydro</span>
-                    <div className='d-flex align-items-center' id='Hydro'>
-                      <span className="cl-hydro fs-5 me-1" id='Hydro'>5</span>
-                      <img src="assets/img/icons/hydro_power.png" alt="hydro_power" className='icon-size' id='Hydro' />
+                <div className="row mx-0">
+                  <div className={`col-6 my-2 text-center ${nodeLeftField}`}>
+                    <div
+                      className="hydro-card"
+                      style={selectedNode === "Hydro" ? nodeStyle : null}
+                      id='Hydro'
+                      onClick={onSelectNode}
+                    >
+                      <div className="d-flex justify-content-between align-items-center" id='Hydro'>
+                        <span className="cl-hydro fs-5" id='Hydro'>Hydro</span>
+                        <div className='d-flex align-items-center' id='Hydro'>
+                          <span className="cl-hydro fs-5 me-1" id='Hydro'>5</span>
+                          <img src="assets/img/icons/hydro_power.png" alt="hydro_power" className='icon-size' id='Hydro' />
+                        </div>
+                      </div>
+                      <img src="assets/img/node/hydro.png" alt="hydro" className='node-img-size' id='Hydro' />
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Hydro'>
+                        <span className="cl-gray fw-bold" id='Hydro'>Tokens / Day</span>
+                        <span className="cl-hydro fs-5" id='Hydro'>0.025</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Hydro'>
+                        <span className="cl-gray fw-bold" id='Hydro'>ROI</span>
+                        <span className="cl-hydro fs-5" id='Hydro'>114 Days</span>
+                      </div>
                     </div>
                   </div>
-                  <img src="assets/img/node/hydro.png" alt="hydro" className='node-img-size' id='Hydro' />
-                  <div className="d-flex justify-content-between align-items-center border-top" id='Hydro'>
-                    <span className="cl-gray fw-bold" id='Hydro'>Tokens / Day</span>
-                    <span className="cl-hydro fs-5" id='Hydro'>0.025</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-top" id='Hydro'>
-                    <span className="cl-gray fw-bold" id='Hydro'>ROI</span>
-                    <span className="cl-hydro fs-5" id='Hydro'>114 Days</span>
-                  </div>
-                </div>
-              </div>
 
-              <div className="col-lg-6 my-2 text-center node-item-field pe-0 ps-2">
-                <div
-                  className="wind-card"
-                  style={selectedNode === "Wind" ? nodeStyle : null}
-                  id='Wind'
-                  onClick={onSelectNode}
-                >
-                  <div className="d-flex justify-content-between align-items-center" id='Wind'>
-                    <span className="cl-wind fs-5" id='Wind'>Wind</span>
-                    <div className='d-flex align-items-center' id='Wind'>
-                      <span className="cl-wind fs-5 me-1" id='Wind'>1</span>
-                      <img src="assets/img/icons/wind_power.png" alt="wind_power" className='icon-size' id='Wind' />
+                  <div className={`col-6 my-2 text-center ${nodeRightField}`}>
+                    <div
+                      className="wind-card"
+                      style={selectedNode === "Wind" ? nodeStyle : null}
+                      id='Wind'
+                      onClick={onSelectNode}
+                    >
+                      <div className="d-flex justify-content-between align-items-center" id='Wind'>
+                        <span className="cl-wind fs-5" id='Wind'>Wind</span>
+                        <div className='d-flex align-items-center' id='Wind'>
+                          <span className="cl-wind fs-5 me-1" id='Wind'>1</span>
+                          <img src="assets/img/icons/wind_power.png" alt="wind_power" className='icon-size' id='Wind' />
+                        </div>
+                      </div>
+                      <img src="assets/img/node/wind.png" alt="wind" className='node-img-size' id='Wind' />
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Wind'>
+                        <span className="cl-gray fw-bold" id='Wind'>Tokens / Day</span>
+                        <span className="cl-wind fs-5" id='Wind'>0.003</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Wind'>
+                        <span className="cl-gray fw-bold" id='Wind'>ROI</span>
+                        <span className="cl-wind fs-5" id='Wind'>114 Days</span>
+                      </div>
                     </div>
-                  </div>
-                  <img src="assets/img/node/wind.png" alt="wind" className='node-img-size' id='Wind' />
-                  <div className="d-flex justify-content-between align-items-center border-top" id='Wind'>
-                    <span className="cl-gray fw-bold" id='Wind'>Tokens / Day</span>
-                    <span className="cl-wind fs-5" id='Wind'>0.003</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-top" id='Wind'>
-                    <span className="cl-gray fw-bold" id='Wind'>ROI</span>
-                    <span className="cl-wind fs-5" id='Wind'>114 Days</span>
                   </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div>
+                <div className="row mx-0 mt-2">
+                  <div className={`col-12 my-2 text-center ${nodeLeftField}`}>
+                    <div
+                      className="nuclear-card"
+                      style={selectedNode === "Nuclear" ? nodeStyle : null}
+                      id='Nuclear'
+                      onClick={onSelectNode}
+                    >
+                      <div className="d-flex justify-content-between align-items-center" id='Nuclear'>
+                        <span className="cl-nuclear fs-5" id='Nuclear'>Nuclear</span>
+                        <div className='d-flex align-items-center' id='Nuclear'>
+                          <span className="cl-nuclear fs-5 me-1" id='Nuclear'>50</span>
+                          <img src="assets/img/icons/nuclear_power.png" alt="nuclear_power" className='icon-size' id='Nuclear' />
+                        </div>
+                      </div>
+                      <img src="assets/img/node/nuclear.png" alt="nuclear" className='node-img-size' id='Nuclear' />
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Nuclear'>
+                        <span className="cl-gray fw-bold" id='Nuclear'>Tokens / Day</span>
+                        <span className="cl-nuclear fs-5" id='Nuclear'>0.7</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Nuclear'>
+                        <span className="cl-gray fw-bold" id='Nuclear'>ROI</span>
+                        <span className="cl-nuclear fs-5" id='Nuclear'>114 Days</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={`col-12 my-2 text-center ${nodeRightField}`}>
+                    <div
+                      className="solar-card"
+                      style={selectedNode === "Solar" ? nodeStyle : null}
+                      id='Solar'
+                      onClick={onSelectNode}
+                    >
+                      <div className="d-flex justify-content-between align-items-center" id='Solar'>
+                        <span className="cl-solar fs-5" id='Solar'>Solar</span>
+                        <div className='d-flex align-items-center' id='Solar'>
+                          <span className="cl-solar fs-5 me-1" id='Solar'>10</span>
+                          <img src="assets/img/icons/solar_power.png" alt="solar_power" className='icon-size' id='Solar' />
+                        </div>
+                      </div>
+                      <img src="assets/img/node/solar.png" alt="solar" className='node-img-size' id='Solar' />
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Solar'>
+                        <span className="cl-gray fw-bold" id='Solar'>Tokens / Day</span>
+                        <span className="cl-solar fs-5" id='Solar'>0.1</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Solar'>
+                        <span className="cl-gray fw-bold" id='Solar'>ROI</span>
+                        <span className="cl-solar fs-5" id='Solar'>114 Days</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row mx-0">
+                  <div className={`col-12 my-2 text-center ${nodeLeftField}`}>
+                    <div
+                      className="hydro-card"
+                      style={selectedNode === "Hydro" ? nodeStyle : null}
+                      id='Hydro'
+                      onClick={onSelectNode}
+                    >
+                      <div className="d-flex justify-content-between align-items-center" id='Hydro'>
+                        <span className="cl-hydro fs-5" id='Hydro'>Hydro</span>
+                        <div className='d-flex align-items-center' id='Hydro'>
+                          <span className="cl-hydro fs-5 me-1" id='Hydro'>5</span>
+                          <img src="assets/img/icons/hydro_power.png" alt="hydro_power" className='icon-size' id='Hydro' />
+                        </div>
+                      </div>
+                      <img src="assets/img/node/hydro.png" alt="hydro" className='node-img-size' id='Hydro' />
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Hydro'>
+                        <span className="cl-gray fw-bold" id='Hydro'>Tokens / Day</span>
+                        <span className="cl-hydro fs-5" id='Hydro'>0.025</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Hydro'>
+                        <span className="cl-gray fw-bold" id='Hydro'>ROI</span>
+                        <span className="cl-hydro fs-5" id='Hydro'>114 Days</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={`col-12 my-2 text-center ${nodeRightField}`}>
+                    <div
+                      className="wind-card"
+                      style={selectedNode === "Wind" ? nodeStyle : null}
+                      id='Wind'
+                      onClick={onSelectNode}
+                    >
+                      <div className="d-flex justify-content-between align-items-center" id='Wind'>
+                        <span className="cl-wind fs-5" id='Wind'>Wind</span>
+                        <div className='d-flex align-items-center' id='Wind'>
+                          <span className="cl-wind fs-5 me-1" id='Wind'>1</span>
+                          <img src="assets/img/icons/wind_power.png" alt="wind_power" className='icon-size' id='Wind' />
+                        </div>
+                      </div>
+                      <img src="assets/img/node/wind.png" alt="wind" className='node-img-size' id='Wind' />
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Wind'>
+                        <span className="cl-gray fw-bold" id='Wind'>Tokens / Day</span>
+                        <span className="cl-wind fs-5" id='Wind'>0.003</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center border-top" id='Wind'>
+                        <span className="cl-gray fw-bold" id='Wind'>ROI</span>
+                        <span className="cl-wind fs-5" id='Wind'>114 Days</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <input type="text" name="node_name" placeholder='Enter your node’s name here' className='nodename_input mt-3' />
 
@@ -363,59 +597,9 @@ const Dashboard = () => {
             </div> */}
 
             <div className="node-list" style={{ height: `${height - 360}px` }}>
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Wind" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Hydro" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Solar" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
-              <NodeItem type="Nuclear" name="Nuclear Node 01" rewards={2.54} />
+              {nodeArray.map((item, index) =>
+                <NodeItem key={index} type={item.type} name={item.name} rewards={item.rewards} />
+              )}
             </div>
 
           </div>

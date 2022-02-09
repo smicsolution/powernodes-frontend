@@ -1,6 +1,15 @@
 .sidemenu-field {
   position: absolute;
-  width: 280px;
+  width: 250px;
+}
+
+.pro-sidebar.collapsed {
+  width: 30px;
+  min-width: 30px;
+}
+
+.pro-sidebar .pro-menu .pro-menu-item > .pro-inner-item {
+  justify-content: center;
 }
 
 .pro-sidebar > .pro-sidebar-inner {

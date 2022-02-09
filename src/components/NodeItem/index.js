@@ -51,7 +51,7 @@ const NodeItem = ({ type, name, rewards }) => {
             <img src="assets/img/icons/fantom.png" alt="fantom" className='icon-size' />
           </div>
           <div className="col-7 d-flex align-items-center">
-            <span className="cl-white-80">{type}</span>
+            <span className="cl-white-80 text-truncate">{type}</span>
           </div>
           <div className="col-5 d-flex align-items-center">
             <span className={`${nameColor} text-truncate`}>{name}</span>
