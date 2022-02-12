@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Web3ReactProvider } from '@web3-react/core';
+import { ethers } from 'ethers'
 import Web3 from 'web3';
 import { Provider } from 'react-redux';
 
@@ -11,6 +12,14 @@ import store from './redux/store';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+// const POLLING_INTERVAL = 12000;
+
+// const getLibrary = (provider) => {
+//   const library = new ethers.providers.Web3Provider(provider);
+//   library.pollingInterval = POLLING_INTERVAL;
+//   return library;
+// };
 
 function getLibrary (provider) {
   return new Web3(provider);

@@ -8,7 +8,6 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 
-import { TiThMenu } from "react-icons/ti";
 import { BiChat } from "react-icons/bi";
 import { RiCloseLine } from "react-icons/ri";
 import { IoShareSocialOutline } from 'react-icons/io5'

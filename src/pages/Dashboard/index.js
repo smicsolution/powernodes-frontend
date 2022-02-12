@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import { RiArrowRightUpLine } from 'react-icons/ri'
 import { IoTrashBinSharp } from 'react-icons/io5'
 import { useResizeDetector } from 'react-resize-detector'
+import { useWeb3React } from "@web3-react/core";
+
+import tierABI from '../../constants/ABI/tier.json';
+import tierNodeABI from '../../constants/ABI/node.json';
+import tokenABI from '../../constants/ABI/token.json';
+import { tierAddr, tierNode, tokenAddr, ftmAddr, usdtAddr, ftm_usdt_lp, ftm_power_lp } from '../../constants/Addresses';
 
 import './style.css'
 
 import NodeItem from '../../components/NodeItem';
+
+import isEmpty from '../../utils/is-empty';
+import notify from '../../utils/notify';
 
 const nodeArray = [
   {
@@ -116,6 +126,8 @@ const nodeArray = [
 ]
 
 const Dashboard = () => {
+  const { library, account } = useWeb3React();
+
   const { width, height, ref } = useResizeDetector();
 
   const [selectedNode, setSelectedNode] = useState("Nuclear");
@@ -127,6 +139,311 @@ const Dashboard = () => {
   });
   const [nodeLeftField, setLeftField] = useState("ps-0 pe-2");
   const [nodeRightField, setRightField] = useState("pe-0 ps-2");
+
+  const [token, setToken] = useState(undefined);
+  const [tier, setTier] = useState(undefined);
+  const [wind, setWind] = useState(undefined);
+  const [hydro, setHydro] = useState(undefined);
+  const [solar, setSolar] = useState(undefined);
+  const [nuclear, setNuclear] = useState(undefined);
+  const [ftm, setFTM] = useState(undefined);
+  const [usdt, setUSDT] = useState(undefined);
+
+  const [totalNode, setTotalNode] = useState(0);
+  const [totalWind, setTotalWind] = useState(0);
+  const [totalHydro, setTotalHydro] = useState(0);
+  const [totalSolar, setTotalSolar] = useState(0);
+  const [totalNuclear, setTotalNuclear] = useState(0);
+
+  const [userWind, setUserWind] = useState(0);
+  const [userHydro, setUserHydro] = useState(0);
+  const [userSolar, setUserSolar] = useState(0);
+  const [userNuclear, setUserNuclear] = useState(0);
+
+  const [ftmPrice, setFTMPrice] = useState(0);
+  const [powerPrice, setPowerPrice] = useState(0);
+
+  const [balance, setBalance] = useState(0);
+  const [approved, setApproved] = useState(false);
+  const [nodeName, setNodeName] = useState("");
+
+  const [windReward, setWindReward] = useState(0);
+  const [hydroReward, setHydroReward] = useState(0);
+  const [solarReward, setSolarReward] = useState(0);
+  const [nuclearReward, setNuclearReward] = useState(0);
+
+  const [windNode, setWindNode] = useState([]);
+  const [hydroNode, setHydroNode] = useState([]);
+  const [solarNode, setSolarNode] = useState([]);
+  const [nuclearNode, setNuclearNode] = useState([]);
+
+  const [myNodeItems, setMyNodeItems] = useState(null);
+
+  const ETHUnit = 1e18;
+  const MaxUint256 = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+  const APItoken = "19VRUK55Q67WQ8HX6FC9626AYRMTDEF2F5";
+  const nodePrice = [1, 5, 10, 50];
+
+  useEffect(() => {
+    if (!isEmpty(library)) {
+      const _token = new library.eth.Contract(tokenABI, tokenAddr);
+      const _ftm = new library.eth.Contract(tokenABI, ftmAddr);
+      const _usdt = new library.eth.Contract(tokenABI, usdtAddr);
+      const _tier = new library.eth.Contract(tierABI, tierAddr);
+      const _wind = new library.eth.Contract(tierNodeABI, tierNode.wind);
+      const _hydro = new library.eth.Contract(tierNodeABI, tierNode.hydro);
+      const _solar = new library.eth.Contract(tierNodeABI, tierNode.solar);
+      const _nuclear = new library.eth.Contract(tierNodeABI, tierNode.nuclear);
+
+      setToken(_token);
+      setFTM(_ftm);
+      setUSDT(_usdt);
+      setTier(_tier);
+      setWind(_wind);
+      setHydro(_hydro);
+      setSolar(_solar);
+      setNuclear(_nuclear);
+    } else {
+      setToken(undefined);
+      setFTM(undefined);
+      setUSDT(undefined);
+      setTier(undefined);
+      setWind(undefined);
+      setHydro(undefined);
+      setSolar(undefined);
+      setNuclear(undefined);
+    }
+  }, [library])
+
+  useEffect(() => {
+    if (isEmpty(tier)) {
+      setTotalNode(0);
+      setTotalWind(0);
+      setTotalHydro(0);
+      setTotalSolar(0);
+      setTotalNuclear(0);
+      setFTMPrice(0);
+      setPowerPrice(0);
+    } else {
+      const itv = setInterval(() => {
+        usdt.methods.balanceOf(ftm_usdt_lp).call().then((usdtBal) => {
+          ftm.methods.balanceOf(ftm_usdt_lp).call().then((ftmBal1) => {
+            ftm.methods.balanceOf(ftm_power_lp).call().then((ftmBal2) => {
+              token.methods.balanceOf(ftm_power_lp).call().then((tokenBal) => {
+                const powerCost = parseFloat(ftmBal2) / parseFloat(tokenBal) * parseFloat(usdtBal) / parseFloat(ftmBal1) * 1000000000000;
+                const ftmCost = parseFloat(usdtBal / ftmBal1) * 1000000000000;
+                // console.log({
+                //   ftm: ftmBal1,
+                //   usdt: usdtBal,
+                //   ftmLQ: ftmBal2,
+                //   power: tokenBal
+                // })
+                setPowerPrice(powerCost);
+                setFTMPrice(ftmCost);
+              })
+            })
+          })
+        })
+
+        tier.methods.getTotalCreatedNodes().call()
+          .then(_totalToken => {
+            setTotalNode(parseInt(_totalToken - 80));
+          })
+
+        wind.methods.totalNodesCreated().call()
+          .then(_totalWind => {
+            setTotalWind(parseInt(_totalWind));
+          })
+        hydro.methods.totalNodesCreated().call()
+          .then(_totalHydro => {
+            setTotalHydro(parseInt(_totalHydro));
+          })
+        solar.methods.totalNodesCreated().call()
+          .then(_totalSolar => {
+            setTotalSolar(parseInt(_totalSolar));
+          })
+        nuclear.methods.totalNodesCreated().call()
+          .then(_totalNuclear => {
+            setTotalNuclear(parseInt(_totalNuclear));
+          })
+      }, 3000)
+
+      return () => clearInterval(itv);
+    }
+  }, [tier, ftm, usdt])
+
+  useEffect(() => {
+    if (isEmpty(account) || isEmpty(tier)) {
+      setBalance(0);
+      setApproved(false);
+
+      setUserWind(0);
+      setUserHydro(0);
+      setUserSolar(0);
+      setUserNuclear(0);
+
+      setWindReward(0);
+      setHydroReward(0);
+      setSolarReward(0);
+      setNuclearReward(0);
+
+      setWindNode([]);
+      setHydroNode([]);
+      setSolarNode([]);
+      setNuclearNode([]);
+    } else {
+      const itv = setInterval(() => {
+        token.methods.allowance(account, tokenAddr).call().then((_approved) => {
+          if (_approved == '0') setApproved(false);
+          else setApproved(true);
+        })
+
+        // axios.get(`https://api.ftmscan.com/api?module=account&action=tokenbalance&contractaddress=${tokenAddr}&address=${account}&tag=latest&apikey=${APItoken}`)
+        //   .then(res => {
+        //     setBalance(parseFloat(res.data.result / ETHUnit));
+        //   });
+
+        token.methods.balanceOf(account).call().then((_balance) => {
+          setBalance(parseFloat(_balance) / ETHUnit);
+        })
+
+        tier.methods.getNodeNumberOf(account, "FLATVERSAL").call().then(_wind => {
+          console.log({ user_wind: _wind })
+          if (_wind != 0) {
+            tier.methods.getRewardAmountOf(account, "FLATVERSAL").call().then((_windReward) => {
+              console.log({ wind_reward: _windReward })
+              setWindReward(_windReward);
+            })
+            wind.methods._getNodesNames(account).call().then((names) => {
+              wind.methods._getNodesRewardAvailable(account).call().then((rewards) => {
+                let tmp = [];
+                let nameArray = names.split("#");
+                let rewardArray = rewards.split("#");
+                for (let i = 0; i < nameArray.length; i++) {
+                  tmp.push({
+                    name: nameArray[i],
+                    reward: rewardArray[i],
+                    type: "Wind"
+                  });
+                }
+                console.log({ wind_node: tmp })
+                setWindNode(tmp);
+              })
+            });
+          } else {
+            setWindReward(0)
+            setWindNode([]);
+          }
+          setUserWind(parseInt(_wind));
+        });
+
+        tier.methods.getNodeNumberOf(account, "MICROSCOPIC").call().then(_hydro => {
+          console.log({ user_hydro: _hydro })
+          if (_hydro != 0) {
+            tier.methods.getRewardAmountOf(account, "MICROSCOPIC").call().then((_hydroReward) => {
+              console.log({ hydro_reward: _hydroReward })
+              setHydroReward(_hydroReward);
+            })
+            hydro.methods._getNodesNames(account).call().then((names) => {
+              hydro.methods._getNodesRewardAvailable(account).call().then((rewards) => {
+                let tmp = [];
+                let nameArray = names.split("#");
+                let rewardArray = rewards.split("#");
+                for (let i = 0; i < nameArray.length; i++) {
+                  tmp.push({
+                    name: nameArray[i],
+                    reward: rewardArray[i],
+                    type: "Hydro"
+                  });
+                }
+                console.log({ hydro_node: tmp })
+                setHydroNode(tmp);
+              })
+            });
+          } else {
+            setHydroReward(0)
+            setHydroNode([]);
+          }
+          setUserHydro(parseInt(_hydro));
+        });
+
+        tier.methods.getNodeNumberOf(account, "HUMAN").call().then(_solar => {
+          console.log({ user_solar: _solar })
+          if (_solar != 0) {
+            tier.methods.getRewardAmountOf(account, "HUMAN").call().then((_solarReward) => {
+              console.log({ solar_reward: _solarReward })
+              setSolarReward(_solarReward);
+            })
+            solar.methods._getNodesNames(account).call().then((names) => {
+              solar.methods._getNodesRewardAvailable(account).call().then((rewards) => {
+                let tmp = [];
+                let nameArray = names.split("#");
+                let rewardArray = rewards.split("#");
+                for (let i = 0; i < nameArray.length; i++) {
+                  tmp.push({
+                    name: nameArray[i],
+                    reward: rewardArray[i],
+                    type: "Solar"
+                  });
+                }
+                console.log({ solar_node: tmp })
+                setSolarNode(tmp);
+              })
+            });
+          } else {
+            setSolarReward(0)
+            setSolarNode([]);
+          }
+          setUserSolar(parseInt(_solar));
+        });
+
+        tier.methods.getNodeNumberOf(account, "SUPERHUMAN").call().then(_nuclear => {
+          console.log({ user_nuclear: _nuclear })
+          if (_nuclear != 0) {
+            tier.methods.getRewardAmountOf(account, "SUPERHUMAN").call().then((_nuclearReward) => {
+              console.log({ nuclear_reward: _nuclearReward })
+              setNuclearReward(_nuclearReward);
+            })
+            nuclear.methods._getNodesNames(account).call().then((names) => {
+              nuclear.methods._getNodesRewardAvailable(account).call().then((rewards) => {
+                let tmp = [];
+                let nameArray = names.split("#");
+                let rewardArray = rewards.split("#");
+                for (let i = 0; i < nameArray.length; i++) {
+                  tmp.push({
+                    name: nameArray[i],
+                    reward: rewardArray[i],
+                    type: "Nuclear"
+                  });
+                }
+                console.log({ nuclear_node: tmp })
+                setNuclearNode(tmp);
+              })
+            });
+          } else {
+            setNuclearReward(0)
+            setNuclearNode([]);
+          }
+          setUserNuclear(parseInt(_nuclear));
+        });
+      }, 3000);
+
+      return () => clearInterval(itv);
+    }
+  }, [account, tier, wind, hydro, solar, nuclear]);
+
+  useEffect(() => {
+    let nodeItems;
+    let myNodeItemsComponents;
+
+    nodeItems = nuclearNode.concat(solarNode).concat(hydroNode).concat(windNode);
+
+    myNodeItemsComponents = nodeItems.map((item, index) => {
+      return <NodeItem key={index} type={item.type} name={item.name} rewards={item.reward} />
+    });
+
+    setMyNodeItems(myNodeItemsComponents);
+  }, [windNode, hydroNode, solarNode, nuclearNode])
 
   useEffect(() => {
     if (width > 430) {
@@ -172,7 +489,100 @@ const Dashboard = () => {
     }
   }
 
-  const num = 36874;
+  const approve = () => {
+    token.methods.approve(tokenAddr, MaxUint256).send({ from: account }).then(() => {
+      notify("Approved Successfully!", "Please create a new node", "success");
+    })
+  }
+
+  const createNode = () => {
+    const nameLength = nodeName.length;
+
+    if (nameLength < 3 || nameLength > 12) {
+      notify("Invalid node's name!", "Node's name must be between 3 and 12", "warning");
+      return;
+    }
+
+    if (!isEmpty(windNode)) {
+      const index = windNode.findIndex((item) => {
+        return item.name == nodeName;
+      })
+      if (index !== -1) {
+        notify("Invalid node's name!", "The name already exists in Wind", "warning");
+        return;
+      }
+    }
+    if (!isEmpty(hydroNode)) {
+      const index = hydroNode.findIndex((item) => {
+        return item.name == nodeName;
+      })
+      if (index !== -1) {
+        notify("Invalid node's name!", "The name already exists in Hydro", "warning");
+        return;
+      }
+    }
+    if (!isEmpty(solarNode)) {
+      const index = solarNode.findIndex((item) => {
+        return item.name == nodeName;
+      })
+      if (index !== -1) {
+        notify("Invalid node's name!", "The name already exists in Solar", "warning");
+        return;
+      }
+    }
+    if (!isEmpty(nuclearNode)) {
+      const index = nuclearNode.findIndex((item) => {
+        return item.name == nodeName;
+      })
+      if (index !== -1) {
+        notify("Invalid node's name!", "The name already exists in Nuclear", "warning");
+        return;
+      }
+    }
+
+    let id = 0;
+    let node_type = "";
+    if (selectedNode === 'Wind') {
+      id = 0;
+      node_type = "FLATVERSAL";
+    } else if (selectedNode === 'Hydro') {
+      id = 1;
+      node_type = "MICROSCOPIC";
+    } else if (selectedNode === 'Solar') {
+      id = 2;
+      node_type = "HUMAN";
+    } else if (selectedNode === 'Nuclear') {
+      id = 3;
+      node_type = "SUPERHUMAN";
+    }
+
+    if (balance < nodePrice[id]) {
+      notify("Insufficient balance!", "Please buy $Power", "warning");
+      return;
+    }
+
+    tier.methods.createNodeWithTokens(nodeName, node_type).send({ from: account }).then(() => {
+      if (selectedNode === 'Wind') {
+        notify("Success!", "New Wind node created", "success");
+      } else if (selectedNode === 'Hydro') {
+        notify("Success!", "New Hydro node created", "success");
+      } else if (selectedNode === 'Solar') {
+        notify("Success!", "New Solar node created", "success");
+      } else if (selectedNode === 'Nuclear') {
+        notify("Success!", "New Nuclear node created", "success");
+      }
+
+      setNodeName("");
+    })
+  }
+
+  const claimRewards = () => {
+
+  }
+
+  const inputNodeName = e => {
+    setNodeName(e.target.value);
+  }
 
   return (
     <React.Fragment>
@@ -181,7 +591,7 @@ const Dashboard = () => {
         <div className="d-flex align-items-center">
           <span className='cl-gray me-2'>Your wallet:</span>
           <img src="assets/img/icons/power.png" alt="power" style={{ height: '1.1rem' }} />
-          <span className="cl-orange fs-5 ms-1">0</span>
+          <span className="cl-orange fs-5 ms-1">{balance.toFixed(2)}</span>
         </div>
       </div>
 
@@ -191,33 +601,33 @@ const Dashboard = () => {
             <p className="mb-0 cl-orange-gd fw-bold fs-5">Total Generators</p>
             <div>
               <p className="mb-0">
-                <span className='cl-orange-gd fw-bold fs-1'>{num.toLocaleString()}</span>
+                <span className='cl-orange-gd fw-bold fs-1'>{totalNode.toLocaleString()}</span>
                 <span className="cl-gray ms-2">Generators</span>
               </p>
               <div className="row mx-0 border-top py-1">
                 <div className="col-5 px-0 d-flex justify-content-between">
                   <span className='cl-wind'>Wind</span>
-                  <span className="cl-orange-gd fw-bold">9648</span>
+                  <span className="cl-orange-gd fw-bold">{totalWind.toLocaleString()}</span>
                 </div>
                 <div className="col-2 d-flex justify-content-center">
                   <span className='vertical-border'></span>
                 </div>
                 <div className="col-5 px-0 d-flex justify-content-between">
                   <span className='cl-hydro'>Hydro</span>
-                  <span className="cl-orange-gd fw-bold">9648</span>
+                  <span className="cl-orange-gd fw-bold">{totalHydro.toLocaleString()}</span>
                 </div>
               </div>
               <div className="row mx-0 border-top py-1">
                 <div className="col-5 px-0 d-flex justify-content-between">
                   <span className='cl-solar'>Solar</span>
-                  <span className="cl-orange-gd fw-bold">9648</span>
+                  <span className="cl-orange-gd fw-bold">{totalSolar.toLocaleString()}</span>
                 </div>
                 <div className="col-2 d-flex justify-content-center">
                   <span className='vertical-border'></span>
                 </div>
                 <div className="col-5 px-0 d-flex justify-content-between">
                   <span className='cl-nuclear'>Nuclear</span>
-                  <span className="cl-orange-gd fw-bold">9648</span>
+                  <span className="cl-orange-gd fw-bold">{totalNuclear.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -237,7 +647,7 @@ const Dashboard = () => {
             <div className="d-flex justify-content-between align-items-end">
               <div className="d-flex align-items-end">
                 <span className="cl-orange-gd fw-bold fs-5">$</span>
-                <span className="cl-orange-gd fw-bold fs-1" style={{ lineHeight: '2.5rem' }}>19.20</span>
+                <span className="cl-orange-gd fw-bold fs-1" style={{ lineHeight: '2.5rem' }}>{powerPrice.toFixed(2)}</span>
                 <small className="cl-gray">/USD</small>
               </div>
               <div className='text-end'>
@@ -264,7 +674,7 @@ const Dashboard = () => {
             <div className="d-flex justify-content-between align-items-end">
               <div className="d-flex align-items-end">
                 <span className="cl-fantom-gd fw-bold fs-5">$</span>
-                <span className="cl-fantom-gd fw-bold fs-1" style={{ lineHeight: '2.5rem' }}>2.37</span>
+                <span className="cl-fantom-gd fw-bold fs-1" style={{ lineHeight: '2.5rem' }}>{ftmPrice.toFixed(2)}</span>
                 <small className="cl-gray">/USD</small>
               </div>
               <div className='text-end'>
@@ -510,17 +920,34 @@ const Dashboard = () => {
               </div>
             )}
 
-            <input type="text" name="node_name" placeholder='Enter your node’s name here' className='nodename_input mt-3' />
+            <input type="text" name="node_name" placeholder='Enter your node’s name here' value={nodeName} onChange={inputNodeName} className='nodename_input mt-3' />
 
             <p className="mb-0 mt-3">If this is your first time creating a node, please approve the contract first.</p>
 
             <div className="mt-2 d-flex flex-wrap">
-              <button type='button' className='dark-btn me-2 px-3 my-2'>
-                <span className='cl-orange-gd fw-bold'>Approve Contract</span>
-              </button>
-              <button type='button' className='orange-btn me-2 px-3 my-2'>
-                <span className='cl-black fw-bold'>Create Node</span>
-              </button>
+              {approved ? (
+                <button type='button' className='dark-btn me-2 px-3 my-2' disabled={true}>
+                  <span className='cl-orange-gd fw-bold'>Approve Contract</span>
+                </button>
+              ) : (isEmpty(account) ? (
+                <button type='button' className='dark-btn me-2 px-3 my-2' disabled={true}>
+                  <span className='cl-orange-gd fw-bold'>Approve Contract</span>
+                </button>
+              ) : (
+                <button type='button' className='dark-btn me-2 px-3 my-2' onClick={approve}>
+                  <span className='cl-orange-gd fw-bold'>Approve Contract</span>
+                </button>
+              )
+              )}
+              {approved ? (
+                <button type='button' className='orange-btn me-2 px-3 my-2' onClick={createNode}>
+                  <span className='cl-black fw-bold'>Create Node</span>
+                </button>
+              ) : (
+                <button type='button' className='orange-btn me-2 px-3 my-2' disabled={true}>
+                  <span className='cl-black fw-bold'>Create Node</span>
+                </button>
+              )}
               <button type='button' className='orange-btn px-3 my-2'>
                 <span className='cl-black fw-bold'>Compound Rewards</span>
               </button>
@@ -536,20 +963,27 @@ const Dashboard = () => {
                 <img src="assets/img/icons/generator.png" alt="generator" className='icon-size me-2' />
                 <span className="fs-5">Your Rewards</span>
               </div>
-              <button type='button' className='white-btn my-1'>
-                <span className="cl-orange-gd fw-bold px-3">Claim Rewards</span>
-              </button>
+              {(parseFloat(windReward) + parseFloat(hydroReward) + parseFloat(solarReward) + parseFloat(nuclearReward) === 0) ? (
+                <button type='button' className='white-btn my-1' disabled={true}>
+                  <span className="cl-orange-gd fw-bold px-3">Claim Rewards</span>
+                </button>
+              ) : (
+                <button type='button' className='white-btn my-1' onClick={claimRewards}>
+                  <span className="cl-orange-gd fw-bold px-3">Claim Rewards</span>
+                </button>
+              )}
+
             </div>
 
             <div className="row mx-0">
               <div className="col-6 p-0 text-start right-border">
-                <p className="mb-0 cl-white-60">3.68 / Day</p>
-                <p className="mb-0 fs-1 cl-white-gd">24.004</p>
+                <p className="mb-0 cl-white-60">{(parseFloat(userWind) * 0.003 + parseFloat(userHydro) * 0.025 + parseFloat(userSolar) * 0.1 + parseFloat(userNuclear) * 0.7).toFixed(2)} / Day</p>
+                <p className="mb-0 fs-1 cl-white-gd">{(parseFloat(windReward) + parseFloat(hydroReward) + parseFloat(solarReward) + parseFloat(nuclearReward)).toFixed(2)}</p>
                 <p className="mb-0 fs-5">/POWER</p>
               </div>
               <div className="col-6 p-0 text-end">
-                <p className="mb-0 cl-white-60">$71.24 / Day</p>
-                <p className="mb-0 fs-1 cl-white-gd">$464.64</p>
+                <p className="mb-0 cl-white-60">${((parseFloat(userWind) * 0.003 + parseFloat(userHydro) * 0.025 + parseFloat(userSolar) * 0.1 + parseFloat(userNuclear) * 0.7) * parseFloat(powerPrice)).toFixed(2)} / Day</p>
+                <p className="mb-0 fs-1 cl-white-gd">${((parseFloat(windReward) + parseFloat(hydroReward) + parseFloat(solarReward) + parseFloat(nuclearReward)) * parseFloat(powerPrice)).toFixed(2)}</p>
                 <p className="mb-0 fs-5">/USD</p>
               </div>
             </div>
@@ -557,7 +991,7 @@ const Dashboard = () => {
 
           <div className="node-list-field" style={{ height: `${height - 250}px` }}>
             <p className="mb-1 fs-5 cl-orange-gd">Your Generators</p>
-            {width > 400 ? (
+            {width > 390 ? (
               <div className="row mx-0 my-2" id='node-list-header'>
                 <div className="col-1">
                   <span className="cl-white-40">RPC</span>
@@ -589,18 +1023,19 @@ const Dashboard = () => {
               </div>
             )}
 
-            {/* <div className="d-flex justify-content-center align-items-center my-5">
-              <div className="text-center">
-                <IoTrashBinSharp className='display-2' />
-                <p className='mb-0'>NoData</p>
+            {(userWind + userHydro + userSolar + userNuclear) === 0 ? (
+              <div className="d-flex justify-content-center align-items-center my-5">
+                <div className="text-center">
+                  <IoTrashBinSharp className='display-2 cl-orange' />
+                  <p className='mb-0 cl-orange-gd fw-bold'>No Generator</p>
+                </div>
               </div>
-            </div> */}
+            ) : (
+              <div className="node-list" style={{ height: `${height - 360}px` }}>
+                {myNodeItems}
+              </div>
+            )}
 
-            <div className="node-list" style={{ height: `${height - 360}px` }}>
-              {nodeArray.map((item, index) =>
-                <NodeItem key={index} type={item.type} name={item.name} rewards={item.rewards} />
-              )}
-            </div>
 
           </div>
         </div>

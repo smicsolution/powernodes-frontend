@@ -30,10 +30,10 @@
   width: auto;
 }
 
-.right-border {
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
+.wallet-item:hover {
+  cursor: pointer;
 }
 
-.wallet-item {
-  cursor: pointer;
+.right-border {
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
 }

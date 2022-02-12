@@ -7,7 +7,7 @@ import { hideWalletModal } from '../../redux/actions/modal'
 
 import './style.css'
 
-const SelectWalletModal = ({ modal, hideWalletModal }) => {
+const SelectWalletModal = ({ modal, hideWalletModal, connectMetaMask, disconnectMetaMask }) => {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
@@ -27,13 +27,17 @@ const SelectWalletModal = ({ modal, hideWalletModal }) => {
       <div className='select-wallet'>
         <p className="text-center cl-orange fw-bold">Selec your wallet</p>
         <div className="row gx-0 mx-0">
-          <div className="col-6 text-center wallet-item right-border">
-            <img src="assets/img/wallet/metamask.png" alt="metamask" className='wallet-img' />
-            <p className='cl-bright mt-2'>MetaMask</p>
+          <div className="col-6 d-flex justify-content-center right-border">
+            <div className='text-center w-fit-content wallet-item' onClick={connectMetaMask}>
+              <img src="assets/img/wallet/metamask.png" alt="metamask" className='wallet-img' />
+              <p className='cl-bright mt-2'>MetaMask</p>
+            </div>
           </div>
-          <div className="col-6 text-center wallet-item">
-            <img src="assets/img/wallet/WalletConnect.png" alt="metamask" className='wallet-img' />
-            <p className='cl-bright mt-2'>WalletConnect</p>
+          <div className="col-6 d-flex justify-content-center">
+            <div className="text-center w-fit-content wallet-item">
+              <img src="assets/img/wallet/WalletConnect.png" alt="metamask" className='wallet-img' />
+              <p className='cl-bright mt-2'>WalletConnect</p>
+            </div>
           </div>
         </div>
       </div>
@@ -44,6 +48,8 @@ const SelectWalletModal = ({ modal, hideWalletModal }) => {
 
 SelectWalletModal.propTypes = {
   hideWalletModal: PropTypes.func.isRequired,
+  connectMetaMask: PropTypes.func.isRequired,
+  disconnectMetaMask: PropTypes.func.isRequired,
   modal: PropTypes.object.isRequired
 }
 

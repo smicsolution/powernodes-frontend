@@ -1,8 +1,15 @@
-export const tokenAddr = '0x0ceAB70494CA083c356337aE5B72Cc0C2CB42c7A';
-export const whiteRuneAddr = '0x12158754F1BD60981E6E51324Bfdd65e09Ab7C16';
-export const orangeRuneAddr = '0x6187c8a1941A833587625b06f68AdbD4B7fE1154';
-export const greenRuneAddr = '0x48B04ba6D73790e18bc51355495727C98B6D3292';
-export const AVAXUSDTLP = '0xeD8CBD9F0cE3C6986b22002F03c6475CEb7a6256';
-export const AVAXAGMTLP = '0x7cCF0F6f2b21D5dC7351398b28134a013cABC940';
-export const avaxAddr = '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7';
-export const usdtAddr = '0xc7198437980c041c805A1EDcbA50c1Ce5db95118';
+export const nodeManagerAddr = "0xa51b7f5071868d8bdc3619d9e5dddd5fb8c1ab90";
+export const tokenAddr = "0x131c7afb4e5f5c94a27611f7210dfec2215e85ae";
+export const tierAddr = "0xf9F64b2c62210E6aCC266169da7026F209CeCd52";
+
+export const tierNode = {
+  wind: "0x0033FA9888028dD4BC5905241cbf312a8d0b21B3",
+  hydro: "0xFb717Be387F0FAB42A55772ef5CC55B4c324DabD",
+  solar: "0x928a833b65D967Fb0B785ECdCE6ccF1a867f3C28",
+  nuclear: "0xC8007751603bB3E45834A59af64190Bb618b4a83",
+};
+
+export const ftmAddr = "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83"
+export const usdtAddr = "0x04068da6c83afcfa0e13ba15a6696662335d5b75"
+export const ftm_usdt_lp = "0x2b4C76d0dc16BE1C31D4C1DC53bF9B45987Fc75c"
+export const ftm_power_lp = "0x8eae6AaC525e6ec6A686f77e4751D3e8f96f6A83"

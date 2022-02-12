@@ -3,12 +3,11 @@ import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { BsFillArrowUpCircleFill } from 'react-icons/bs';
 import { ToastContainer } from 'react-toastify';
 
-import 'react-toastify/dist/ReactToastify.css';
 import './App.less';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Dashboard from './pages/Dashboard';
 import Header from './components/Header';
-import SelectWalletModal from './components/SelectWalletModal';
 import SideMenu from './components/SideMenu';
 
 const App = () => {
@@ -43,12 +42,15 @@ const App = () => {
             <Redirect from='/' to='/dashboard' />
           </Switch>
         </div>
-        <SelectWalletModal />
         {showButton && (
           <div onClick={scrollToTop} className="back-to-top">
             <BsFillArrowUpCircleFill className='cl-orange' />
           </div>
         )}
+        <ToastContainer
+          closeButton={null}
+          style={{ top: '100px' }}
+        />
       </div>
     </React.Fragment>
   );
