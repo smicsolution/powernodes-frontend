@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
 import { RiArrowRightUpLine } from 'react-icons/ri'
 import { IoTrashBinSharp } from 'react-icons/io5'
 import { useResizeDetector } from 'react-resize-detector'
@@ -181,7 +180,6 @@ const Dashboard = () => {
 
   const ETHUnit = 1e18;
   const MaxUint256 = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-  const APItoken = "19VRUK55Q67WQ8HX6FC9626AYRMTDEF2F5";
   const nodePrice = [1, 5, 10, 50];
 
   useEffect(() => {

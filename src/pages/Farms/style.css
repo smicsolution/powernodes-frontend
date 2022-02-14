@@ -1,0 +1,16 @@
+.farms-item-field {
+  background: #212226;
+  box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.45);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0.8rem 0;
+}
+
+.farms-icon-size {
+  width: auto;
+  height: 1.5rem;
+}
