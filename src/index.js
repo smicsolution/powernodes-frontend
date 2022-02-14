@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Web3ReactProvider } from '@web3-react/core';
-import { ethers } from 'ethers'
 import Web3 from 'web3';
 import { Provider } from 'react-redux';
 

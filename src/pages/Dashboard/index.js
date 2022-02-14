@@ -185,25 +185,7 @@ const Dashboard = () => {
   const nodePrice = [1, 5, 10, 50];
 
   useEffect(() => {
-    if (!isEmpty(library)) {
-      const _token = new library.eth.Contract(tokenABI, tokenAddr);
-      const _ftm = new library.eth.Contract(tokenABI, ftmAddr);
-      const _usdt = new library.eth.Contract(tokenABI, usdtAddr);
-      const _tier = new library.eth.Contract(tierABI, tierAddr);
-      const _wind = new library.eth.Contract(tierNodeABI, tierNode.wind);
-      const _hydro = new library.eth.Contract(tierNodeABI, tierNode.hydro);
-      const _solar = new library.eth.Contract(tierNodeABI, tierNode.solar);
-      const _nuclear = new library.eth.Contract(tierNodeABI, tierNode.nuclear);
-
-      setToken(_token);
-      setFTM(_ftm);
-      setUSDT(_usdt);
-      setTier(_tier);
-      setWind(_wind);
-      setHydro(_hydro);
-      setSolar(_solar);
-      setNuclear(_nuclear);
-    } else {
+    if (isEmpty(library)) {
       setToken(undefined);
       setFTM(undefined);
       setUSDT(undefined);
@@ -212,11 +194,30 @@ const Dashboard = () => {
       setHydro(undefined);
       setSolar(undefined);
       setNuclear(undefined);
+      return;
     }
+
+    const _token = new library.eth.Contract(tokenABI, tokenAddr);
+    const _ftm = new library.eth.Contract(tokenABI, ftmAddr);
+    const _usdt = new library.eth.Contract(tokenABI, usdtAddr);
+    const _tier = new library.eth.Contract(tierABI, tierAddr);
+    const _wind = new library.eth.Contract(tierNodeABI, tierNode.wind);
+    const _hydro = new library.eth.Contract(tierNodeABI, tierNode.hydro);
+    const _solar = new library.eth.Contract(tierNodeABI, tierNode.solar);
+    const _nuclear = new library.eth.Contract(tierNodeABI, tierNode.nuclear);
+
+    setToken(_token);
+    setFTM(_ftm);
+    setUSDT(_usdt);
+    setTier(_tier);
+    setWind(_wind);
+    setHydro(_hydro);
+    setSolar(_solar);
+    setNuclear(_nuclear);
   }, [library])
 
   useEffect(() => {
-    if (isEmpty(tier)) {
+    if (isEmpty(tier) || isEmpty(account)) {
       setTotalNode(0);
       setTotalWind(0);
       setTotalHydro(0);
@@ -224,53 +225,49 @@ const Dashboard = () => {
       setTotalNuclear(0);
       setFTMPrice(0);
       setPowerPrice(0);
-    } else {
-      const itv = setInterval(() => {
-        usdt.methods.balanceOf(ftm_usdt_lp).call().then((usdtBal) => {
-          ftm.methods.balanceOf(ftm_usdt_lp).call().then((ftmBal1) => {
-            ftm.methods.balanceOf(ftm_power_lp).call().then((ftmBal2) => {
-              token.methods.balanceOf(ftm_power_lp).call().then((tokenBal) => {
-                const powerCost = parseFloat(ftmBal2) / parseFloat(tokenBal) * parseFloat(usdtBal) / parseFloat(ftmBal1) * 1000000000000;
-                const ftmCost = parseFloat(usdtBal / ftmBal1) * 1000000000000;
-                // console.log({
-                //   ftm: ftmBal1,
-                //   usdt: usdtBal,
-                //   ftmLQ: ftmBal2,
-                //   power: tokenBal
-                // })
-                setPowerPrice(powerCost);
-                setFTMPrice(ftmCost);
-              })
+
+      return;
+    }
+
+    const itv = setInterval(() => {
+      usdt.methods.balanceOf(ftm_usdt_lp).call().then((usdtBal) => {
+        ftm.methods.balanceOf(ftm_usdt_lp).call().then((ftmBal1) => {
+          ftm.methods.balanceOf(ftm_power_lp).call().then((ftmBal2) => {
+            token.methods.balanceOf(ftm_power_lp).call().then((tokenBal) => {
+              const powerCost = parseFloat(ftmBal2) / parseFloat(tokenBal) * parseFloat(usdtBal) / parseFloat(ftmBal1) * 1000000000000;
+              const ftmCost = parseFloat(usdtBal / ftmBal1) * 1000000000000;
+              setPowerPrice(powerCost);
+              setFTMPrice(ftmCost);
             })
           })
         })
+      })
 
-        tier.methods.getTotalCreatedNodes().call()
-          .then(_totalToken => {
-            setTotalNode(parseInt(_totalToken - 80));
-          })
+      tier.methods.getTotalCreatedNodes().call()
+        .then(_totalToken => {
+          setTotalNode(parseInt(_totalToken - 80));
+        })
 
-        wind.methods.totalNodesCreated().call()
-          .then(_totalWind => {
-            setTotalWind(parseInt(_totalWind));
-          })
-        hydro.methods.totalNodesCreated().call()
-          .then(_totalHydro => {
-            setTotalHydro(parseInt(_totalHydro));
-          })
-        solar.methods.totalNodesCreated().call()
-          .then(_totalSolar => {
-            setTotalSolar(parseInt(_totalSolar));
-          })
-        nuclear.methods.totalNodesCreated().call()
-          .then(_totalNuclear => {
-            setTotalNuclear(parseInt(_totalNuclear));
-          })
-      }, 3000)
+      wind.methods.totalNodesCreated().call()
+        .then(_totalWind => {
+          setTotalWind(parseInt(_totalWind));
+        })
+      hydro.methods.totalNodesCreated().call()
+        .then(_totalHydro => {
+          setTotalHydro(parseInt(_totalHydro));
+        })
+      solar.methods.totalNodesCreated().call()
+        .then(_totalSolar => {
+          setTotalSolar(parseInt(_totalSolar));
+        })
+      nuclear.methods.totalNodesCreated().call()
+        .then(_totalNuclear => {
+          setTotalNuclear(parseInt(_totalNuclear));
+        })
+    }, 3000)
 
-      return () => clearInterval(itv);
-    }
-  }, [tier, ftm, usdt])
+    return () => clearInterval(itv);
+  }, [tier, ftm, usdt, account])
 
   useEffect(() => {
     if (isEmpty(account) || isEmpty(tier)) {
@@ -291,145 +288,147 @@ const Dashboard = () => {
       setHydroNode([]);
       setSolarNode([]);
       setNuclearNode([]);
-    } else {
-      const itv = setInterval(() => {
-        token.methods.allowance(account, tokenAddr).call().then((_approved) => {
-          if (_approved == '0') setApproved(false);
-          else setApproved(true);
-        })
 
-        // axios.get(`https://api.ftmscan.com/api?module=account&action=tokenbalance&contractaddress=${tokenAddr}&address=${account}&tag=latest&apikey=${APItoken}`)
-        //   .then(res => {
-        //     setBalance(parseFloat(res.data.result / ETHUnit));
-        //   });
-
-        token.methods.balanceOf(account).call().then((_balance) => {
-          setBalance(parseFloat(_balance) / ETHUnit);
-        })
-
-        tier.methods.getNodeNumberOf(account, "FLATVERSAL").call().then(_wind => {
-          console.log({ user_wind: _wind })
-          if (_wind != 0) {
-            tier.methods.getRewardAmountOf(account, "FLATVERSAL").call().then((_windReward) => {
-              console.log({ wind_reward: _windReward })
-              setWindReward(_windReward);
-            })
-            wind.methods._getNodesNames(account).call().then((names) => {
-              wind.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-                let tmp = [];
-                let nameArray = names.split("#");
-                let rewardArray = rewards.split("#");
-                for (let i = 0; i < nameArray.length; i++) {
-                  tmp.push({
-                    name: nameArray[i],
-                    reward: rewardArray[i],
-                    type: "Wind"
-                  });
-                }
-                console.log({ wind_node: tmp })
-                setWindNode(tmp);
-              })
-            });
-          } else {
-            setWindReward(0)
-            setWindNode([]);
-          }
-          setUserWind(parseInt(_wind));
-        });
-
-        tier.methods.getNodeNumberOf(account, "MICROSCOPIC").call().then(_hydro => {
-          console.log({ user_hydro: _hydro })
-          if (_hydro != 0) {
-            tier.methods.getRewardAmountOf(account, "MICROSCOPIC").call().then((_hydroReward) => {
-              console.log({ hydro_reward: _hydroReward })
-              setHydroReward(_hydroReward);
-            })
-            hydro.methods._getNodesNames(account).call().then((names) => {
-              hydro.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-                let tmp = [];
-                let nameArray = names.split("#");
-                let rewardArray = rewards.split("#");
-                for (let i = 0; i < nameArray.length; i++) {
-                  tmp.push({
-                    name: nameArray[i],
-                    reward: rewardArray[i],
-                    type: "Hydro"
-                  });
-                }
-                console.log({ hydro_node: tmp })
-                setHydroNode(tmp);
-              })
-            });
-          } else {
-            setHydroReward(0)
-            setHydroNode([]);
-          }
-          setUserHydro(parseInt(_hydro));
-        });
-
-        tier.methods.getNodeNumberOf(account, "HUMAN").call().then(_solar => {
-          console.log({ user_solar: _solar })
-          if (_solar != 0) {
-            tier.methods.getRewardAmountOf(account, "HUMAN").call().then((_solarReward) => {
-              console.log({ solar_reward: _solarReward })
-              setSolarReward(_solarReward);
-            })
-            solar.methods._getNodesNames(account).call().then((names) => {
-              solar.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-                let tmp = [];
-                let nameArray = names.split("#");
-                let rewardArray = rewards.split("#");
-                for (let i = 0; i < nameArray.length; i++) {
-                  tmp.push({
-                    name: nameArray[i],
-                    reward: rewardArray[i],
-                    type: "Solar"
-                  });
-                }
-                console.log({ solar_node: tmp })
-                setSolarNode(tmp);
-              })
-            });
-          } else {
-            setSolarReward(0)
-            setSolarNode([]);
-          }
-          setUserSolar(parseInt(_solar));
-        });
-
-        tier.methods.getNodeNumberOf(account, "SUPERHUMAN").call().then(_nuclear => {
-          console.log({ user_nuclear: _nuclear })
-          if (_nuclear != 0) {
-            tier.methods.getRewardAmountOf(account, "SUPERHUMAN").call().then((_nuclearReward) => {
-              console.log({ nuclear_reward: _nuclearReward })
-              setNuclearReward(_nuclearReward);
-            })
-            nuclear.methods._getNodesNames(account).call().then((names) => {
-              nuclear.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-                let tmp = [];
-                let nameArray = names.split("#");
-                let rewardArray = rewards.split("#");
-                for (let i = 0; i < nameArray.length; i++) {
-                  tmp.push({
-                    name: nameArray[i],
-                    reward: rewardArray[i],
-                    type: "Nuclear"
-                  });
-                }
-                console.log({ nuclear_node: tmp })
-                setNuclearNode(tmp);
-              })
-            });
-          } else {
-            setNuclearReward(0)
-            setNuclearNode([]);
-          }
-          setUserNuclear(parseInt(_nuclear));
-        });
-      }, 3000);
-
-      return () => clearInterval(itv);
+      return;
     }
+
+    const itv = setInterval(() => {
+      token.methods.allowance(account, tokenAddr).call().then((_approved) => {
+        if (_approved == '0') setApproved(false);
+        else setApproved(true);
+      })
+
+      // axios.get(`https://api.ftmscan.com/api?module=account&action=tokenbalance&contractaddress=${tokenAddr}&address=${account}&tag=latest&apikey=${APItoken}`)
+      //   .then(res => {
+      //     setBalance(parseFloat(res.data.result / ETHUnit));
+      //   });
+
+      token.methods.balanceOf(account).call().then((_balance) => {
+        setBalance(parseFloat(_balance) / ETHUnit);
+      })
+
+      tier.methods.getNodeNumberOf(account, "FLATVERSAL").call().then(_wind => {
+        console.log({ user_wind: _wind })
+        if (_wind != 0) {
+          tier.methods.getRewardAmountOf(account, "FLATVERSAL").call().then((_windReward) => {
+            console.log({ wind_reward: _windReward })
+            setWindReward(_windReward);
+          })
+          wind.methods._getNodesNames(account).call().then((names) => {
+            wind.methods._getNodesRewardAvailable(account).call().then((rewards) => {
+              let tmp = [];
+              let nameArray = names.split("#");
+              let rewardArray = rewards.split("#");
+              for (let i = 0; i < nameArray.length; i++) {
+                tmp.push({
+                  name: nameArray[i],
+                  reward: rewardArray[i],
+                  type: "Wind"
+                });
+              }
+              console.log({ wind_node: tmp })
+              setWindNode(tmp);
+            })
+          });
+        } else {
+          setWindReward(0)
+          setWindNode([]);
+        }
+        setUserWind(parseInt(_wind));
+      });
+
+      tier.methods.getNodeNumberOf(account, "MICROSCOPIC").call().then(_hydro => {
+        console.log({ user_hydro: _hydro })
+        if (_hydro != 0) {
+          tier.methods.getRewardAmountOf(account, "MICROSCOPIC").call().then((_hydroReward) => {
+            console.log({ hydro_reward: _hydroReward })
+            setHydroReward(_hydroReward);
+          })
+          hydro.methods._getNodesNames(account).call().then((names) => {
+            hydro.methods._getNodesRewardAvailable(account).call().then((rewards) => {
+              let tmp = [];
+              let nameArray = names.split("#");
+              let rewardArray = rewards.split("#");
+              for (let i = 0; i < nameArray.length; i++) {
+                tmp.push({
+                  name: nameArray[i],
+                  reward: rewardArray[i],
+                  type: "Hydro"
+                });
+              }
+              console.log({ hydro_node: tmp })
+              setHydroNode(tmp);
+            })
+          });
+        } else {
+          setHydroReward(0)
+          setHydroNode([]);
+        }
+        setUserHydro(parseInt(_hydro));
+      });
+
+      tier.methods.getNodeNumberOf(account, "HUMAN").call().then(_solar => {
+        console.log({ user_solar: _solar })
+        if (_solar != 0) {
+          tier.methods.getRewardAmountOf(account, "HUMAN").call().then((_solarReward) => {
+            console.log({ solar_reward: _solarReward })
+            setSolarReward(_solarReward);
+          })
+          solar.methods._getNodesNames(account).call().then((names) => {
+            solar.methods._getNodesRewardAvailable(account).call().then((rewards) => {
+              let tmp = [];
+              let nameArray = names.split("#");
+              let rewardArray = rewards.split("#");
+              for (let i = 0; i < nameArray.length; i++) {
+                tmp.push({
+                  name: nameArray[i],
+                  reward: rewardArray[i],
+                  type: "Solar"
+                });
+              }
+              console.log({ solar_node: tmp })
+              setSolarNode(tmp);
+            })
+          });
+        } else {
+          setSolarReward(0)
+          setSolarNode([]);
+        }
+        setUserSolar(parseInt(_solar));
+      });
+
+      tier.methods.getNodeNumberOf(account, "SUPERHUMAN").call().then(_nuclear => {
+        console.log({ user_nuclear: _nuclear })
+        if (_nuclear != 0) {
+          tier.methods.getRewardAmountOf(account, "SUPERHUMAN").call().then((_nuclearReward) => {
+            console.log({ nuclear_reward: _nuclearReward })
+            setNuclearReward(_nuclearReward);
+          })
+          nuclear.methods._getNodesNames(account).call().then((names) => {
+            nuclear.methods._getNodesRewardAvailable(account).call().then((rewards) => {
+              let tmp = [];
+              let nameArray = names.split("#");
+              let rewardArray = rewards.split("#");
+              for (let i = 0; i < nameArray.length; i++) {
+                tmp.push({
+                  name: nameArray[i],
+                  reward: rewardArray[i],
+                  type: "Nuclear"
+                });
+              }
+              console.log({ nuclear_node: tmp })
+              setNuclearNode(tmp);
+            })
+          });
+        } else {
+          setNuclearReward(0)
+          setNuclearNode([]);
+        }
+        setUserNuclear(parseInt(_nuclear));
+      });
+    }, 3000);
+
+    return () => clearInterval(itv);
   }, [account, tier, wind, hydro, solar, nuclear]);
 
   useEffect(() => {
