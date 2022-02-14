@@ -12,6 +12,7 @@ import { injected } from "../../constants/WalletConnectors";
 
 import { showWalletModal, hideWalletModal } from '../../redux/actions/modal'
 import { setAccount } from '../../redux/actions/account'
+import { setHeaderHeight } from '../../redux/actions/headerHeight'
 
 import SelectWalletModal from '../SelectWalletModal'
 
@@ -20,7 +21,7 @@ import notify from '../../utils/notify';
 import './style.css'
 
 
-const Header = ({ showWalletModal, hideWalletModal, setAccount, myAccount }) => {
+const Header = ({ showWalletModal, hideWalletModal, setAccount, myAccount, setHeaderHeight }) => {
   const { activate, deactivate, account } = useWeb3React();
 
   const [isConnecting, setConnecting] = useState(false)
@@ -30,6 +31,10 @@ const Header = ({ showWalletModal, hideWalletModal, setAccount, myAccount }) => 
   useEffect(() => {
     setAccount(account)
   }, [account])
+
+  useEffect(() => {
+    setHeaderHeight(height);
+  }, [height])
 
   const showSelectWalletModal = () => {
     showWalletModal()
@@ -125,6 +130,7 @@ const Header = ({ showWalletModal, hideWalletModal, setAccount, myAccount }) => 
 Header.propTypes = {
   showWalletModal: PropTypes.func.isRequired,
   hideWalletModal: PropTypes.func.isRequired,
+  setHeaderHeight: PropTypes.func.isRequired,
   setAccount: PropTypes.func.isRequired,
 };
 
@@ -134,4 +140,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { showWalletModal, hideWalletModal, setAccount })(Header);
+export default connect(mapStateToProps, { showWalletModal, hideWalletModal, setHeaderHeight, setAccount })(Header);

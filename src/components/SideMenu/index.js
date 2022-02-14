@@ -8,6 +8,7 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 import { Link } from 'react-router-dom'
+import { useResizeDetector } from 'react-resize-detector'
 
 import { BiChat } from "react-icons/bi";
 import { RiCloseLine } from "react-icons/ri";
@@ -25,13 +26,19 @@ import "react-pro-sidebar/dist/css/styles.css";
 import './style.css';
 
 import { hideSideMenu, showSideMenu } from '../../redux/actions/sidemenu'
+import { setSidebarHeight } from '../../redux/actions/sidebarHeight'
 
-const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header }) => {
+const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header, setSidebarHeight }) => {
   const [menuCollapse, setMenuCollapse] = useState(true);
+  const { width, height, ref } = useResizeDetector();
 
   useEffect(() => {
     setMenuCollapse(sidemenu.isVisibleSidemenu);
   }, [sidemenu])
+
+  useEffect(() => {
+    setSidebarHeight(height);
+  }, [height])
 
   const menuIconClick = () => {
     menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
@@ -46,7 +53,7 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header }) => {
   }
 
   return <React.Fragment>
-    <div className='sidemenu-field' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <div className='sidemenu-field' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} ref={ref}>
       <ProSidebar collapsed={menuCollapse}>
         <SidebarHeader className={`sidebar-header ${menuCollapse ? 'justify-content-center' : 'justify-content-between'}`}>
           <p className='mb-0'>{menuCollapse ? "" : "DASHBOARD"}</p>
@@ -117,6 +124,7 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header }) => {
 SideMenu.propTypes = {
   showSideMenu: PropTypes.func.isRequired,
   hideSideMenu: PropTypes.func.isRequired,
+  setSidebarHeight: PropTypes.func.isRequired,
   sidemenu: PropTypes.object.isRequired,
   header: PropTypes.object.isRequired
 }
@@ -128,4 +136,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { hideSideMenu, showSideMenu })(SideMenu);
+export default connect(mapStateToProps, { hideSideMenu, showSideMenu, setSidebarHeight })(SideMenu);

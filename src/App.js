@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { BsFillArrowUpCircleFill } from 'react-icons/bs';
 import { ToastContainer } from 'react-toastify';
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux';
 
 import './App.less';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,7 +13,7 @@ import Farms from './pages/Farms';
 import Header from './components/Header';
 import SideMenu from './components/SideMenu';
 
-const App = () => {
+const App = ({ sidebar, header }) => {
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ const App = () => {
 
   return (
     <React.Fragment>
-      <div className="app">
+      <div className="app" style={{ minHeight: `${sidebar.sidebarHeight + header.headerHeight + 50}px` }}>
         <Header />
         <SideMenu />
         <div className="content">
@@ -57,5 +59,16 @@ const App = () => {
   );
 }
 
+App.propTypes = {
+  sidebar: PropTypes.object.isRequired
+}
 
-export default (withRouter(App));
+const mapStateToProps = (state) => {
+  return {
+    sidebar: state.sidebar,
+    header: state.header,
+  }
+}
+
+
+export default connect(mapStateToProps)(withRouter(App));
