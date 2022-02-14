@@ -33,3 +33,8 @@
 .pro-inner-item:hover .pro-item-content {
   color: #EA8916;
 }
+
+.sidebar-icon {
+  width: 14px;
+  height: 14px;
+}

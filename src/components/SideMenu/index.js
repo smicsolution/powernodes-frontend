@@ -7,6 +7,7 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
+import { Link } from 'react-router-dom'
 
 import { BiChat } from "react-icons/bi";
 import { RiCloseLine } from "react-icons/ri";
@@ -62,8 +63,12 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header }) => {
           <Menu>
             <MenuItem icon={<BsFillGrid3X3GapFill />}>
               Dashboard
+              <Link to="/dashboard" />
             </MenuItem>
-            <MenuItem icon={<GiTwoCoins />}>Farms</MenuItem>
+            <MenuItem icon={<GiTwoCoins />}>
+              Farms
+              <Link to="/farms" />
+            </MenuItem>
             <MenuItem icon={<HiOutlineCurrencyDollar />}>Treasury</MenuItem>
             <MenuItem icon={<MdTimeline />}>White Paper</MenuItem>
             <MenuItem icon={<IoShareSocialOutline />}>Social Feeds</MenuItem>
@@ -81,6 +86,21 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header }) => {
             </MenuItem>
             <MenuItem icon={<MdOutlineOfflineBolt />}>Add Power Token</MenuItem>
             <MenuItem icon={<GiCheckMark />}>Approve Power</MenuItem>
+          </Menu>
+        </SidebarContent>
+
+        <SidebarHeader className='sidebar-header'>
+          <p className='mb-0'>{menuCollapse ? "" : "UOT MEMBERS"}</p>
+        </SidebarHeader>
+
+        <SidebarContent>
+          <Menu>
+            <MenuItem icon={<img src="assets/img/icons/power.png" alt="power" className='sidebar-icon' />}>
+              <span className='cl-orange-gd fw-bold'>Power</span>
+            </MenuItem>
+            <MenuItem icon={<img src="assets/img/icons/thor.png" alt="power" className='sidebar-icon' />}>
+              <span>Thor</span>
+            </MenuItem>
           </Menu>
         </SidebarContent>
 

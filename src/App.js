@@ -7,6 +7,7 @@ import './App.less';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Dashboard from './pages/Dashboard';
+import Farms from './pages/Farms';
 import Header from './components/Header';
 import SideMenu from './components/SideMenu';
 
@@ -37,8 +38,8 @@ const App = () => {
         <SideMenu />
         <div className="content">
           <Switch>
-            <Route exact path="/dashboard" component={Dashboard} />
-            {/* <Route path="/whitepaper" component={WhitePaper} /> */}
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/farms" component={Farms} />
             <Redirect from='/' to='/dashboard' />
           </Switch>
         </div>
