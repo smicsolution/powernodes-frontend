@@ -3,6 +3,8 @@ import { useResizeDetector } from 'react-resize-detector'
 
 import './style.css'
 
+const ETHUnit = 1e18;
+
 const NodeItem = ({ type, name, rewards }) => {
   const [btnTitle, setBtnTitle] = useState("Claim Rewards");
   const { width, height, ref } = useResizeDetector();
@@ -41,8 +43,12 @@ const NodeItem = ({ type, name, rewards }) => {
             <span className={`${nameColor} text-truncate`}>{name}</span>
           </div>
           <div className="col-6 d-flex align-items-center flex-wrap">
-            <span className="cl-white-80 me-2">{rewards}</span>
-            <button type='button' className='dark-btn-sm cl-orange-gd fw-bold'>{btnTitle}</button>
+            <span className="cl-white-80 me-2">{(parseFloat(rewards) / ETHUnit).toFixed(3)}</span>
+            {rewards === 0 ? (
+              <button type='button' className='dark-btn-sm cl-orange-gd fw-bold' disabled={true}>{btnTitle}</button>
+            ) : (
+              <button type='button' className='dark-btn-sm cl-orange-gd fw-bold'>{btnTitle}</button>
+            )}
           </div>
         </div>
       ) : (

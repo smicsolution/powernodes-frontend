@@ -3,6 +3,7 @@ import { RiArrowRightUpLine } from 'react-icons/ri'
 import { IoTrashBinSharp } from 'react-icons/io5'
 import { useResizeDetector } from 'react-resize-detector'
 import { useWeb3React } from "@web3-react/core";
+import { connect } from 'react-redux'
 
 import tierABI from '../../constants/ABI/tier.json';
 import tierNodeABI from '../../constants/ABI/node.json';
@@ -124,8 +125,8 @@ const nodeArray = [
   }
 ]
 
-const Dashboard = () => {
-  const { library, account } = useWeb3React();
+const Dashboard = ({ account }) => {
+  const { library } = useWeb3React();
 
   const { width, height, ref } = useResizeDetector();
 
@@ -183,7 +184,7 @@ const Dashboard = () => {
   const nodePrice = [1, 5, 10, 50];
 
   useEffect(() => {
-    if (isEmpty(library)) {
+    if (isEmpty(library) || isEmpty(account)) {
       setToken(undefined);
       setFTM(undefined);
       setUSDT(undefined);
@@ -212,7 +213,7 @@ const Dashboard = () => {
     setHydro(_hydro);
     setSolar(_solar);
     setNuclear(_nuclear);
-  }, [library])
+  }, [library, account])
 
   useEffect(() => {
     if (isEmpty(tier) || isEmpty(account)) {
@@ -306,26 +307,31 @@ const Dashboard = () => {
       })
 
       tier.methods.getNodeNumberOf(account, "FLATVERSAL").call().then(_wind => {
-        console.log({ user_wind: _wind })
         if (_wind != 0) {
           tier.methods.getRewardAmountOf(account, "FLATVERSAL").call().then((_windReward) => {
-            console.log({ wind_reward: _windReward })
-            setWindReward(_windReward);
+            console.log(parseFloat(_windReward) / ETHUnit)
+            setWindReward(parseFloat(_windReward) / ETHUnit);
           })
           wind.methods._getNodesNames(account).call().then((names) => {
             wind.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              let tmp = [];
-              let nameArray = names.split("#");
-              let rewardArray = rewards.split("#");
-              for (let i = 0; i < nameArray.length; i++) {
-                tmp.push({
-                  name: nameArray[i],
-                  reward: rewardArray[i],
-                  type: "Wind"
-                });
-              }
-              console.log({ wind_node: tmp })
-              setWindNode(tmp);
+              console.log(rewards)
+              wind.methods._getNodesCreationTime(account).call().then(creationTimes => {
+                let tmp = [];
+                let nameArray = names.split("#");
+                let rewardArray = rewards.split("#");
+                let creationTimeArray = creationTimes.split("#");
+
+                for (let i = 0; i < nameArray.length; i++) {
+                  tmp.push({
+                    name: nameArray[i],
+                    reward: rewardArray[i],
+                    creationTime: creationTimeArray[i],
+                    type: "Wind"
+                  });
+                }
+                console.log(creationTimes)
+                setWindNode(tmp);
+              })
             })
           });
         } else {
@@ -336,11 +342,9 @@ const Dashboard = () => {
       });
 
       tier.methods.getNodeNumberOf(account, "MICROSCOPIC").call().then(_hydro => {
-        console.log({ user_hydro: _hydro })
         if (_hydro != 0) {
           tier.methods.getRewardAmountOf(account, "MICROSCOPIC").call().then((_hydroReward) => {
-            console.log({ hydro_reward: _hydroReward })
-            setHydroReward(_hydroReward);
+            setHydroReward(parseFloat(_hydroReward) / ETHUnit);
           })
           hydro.methods._getNodesNames(account).call().then((names) => {
             hydro.methods._getNodesRewardAvailable(account).call().then((rewards) => {
@@ -354,7 +358,6 @@ const Dashboard = () => {
                   type: "Hydro"
                 });
               }
-              console.log({ hydro_node: tmp })
               setHydroNode(tmp);
             })
           });
@@ -366,11 +369,9 @@ const Dashboard = () => {
       });
 
       tier.methods.getNodeNumberOf(account, "HUMAN").call().then(_solar => {
-        console.log({ user_solar: _solar })
         if (_solar != 0) {
           tier.methods.getRewardAmountOf(account, "HUMAN").call().then((_solarReward) => {
-            console.log({ solar_reward: _solarReward })
-            setSolarReward(_solarReward);
+            setSolarReward(parseFloat(_solarReward) / ETHUnit);
           })
           solar.methods._getNodesNames(account).call().then((names) => {
             solar.methods._getNodesRewardAvailable(account).call().then((rewards) => {
@@ -384,7 +385,6 @@ const Dashboard = () => {
                   type: "Solar"
                 });
               }
-              console.log({ solar_node: tmp })
               setSolarNode(tmp);
             })
           });
@@ -396,11 +396,9 @@ const Dashboard = () => {
       });
 
       tier.methods.getNodeNumberOf(account, "SUPERHUMAN").call().then(_nuclear => {
-        console.log({ user_nuclear: _nuclear })
         if (_nuclear != 0) {
           tier.methods.getRewardAmountOf(account, "SUPERHUMAN").call().then((_nuclearReward) => {
-            console.log({ nuclear_reward: _nuclearReward })
-            setNuclearReward(_nuclearReward);
+            setNuclearReward(parseFloat(_nuclearReward) / ETHUnit);
           })
           nuclear.methods._getNodesNames(account).call().then((names) => {
             nuclear.methods._getNodesRewardAvailable(account).call().then((rewards) => {
@@ -414,7 +412,6 @@ const Dashboard = () => {
                   type: "Nuclear"
                 });
               }
-              console.log({ nuclear_node: tmp })
               setNuclearNode(tmp);
             })
           });
@@ -558,22 +555,28 @@ const Dashboard = () => {
       return;
     }
 
-    tier.methods.createNodeWithTokens(nodeName, node_type).send({ from: account }).then(() => {
-      if (selectedNode === 'Wind') {
-        notify("Success!", "New Wind node created", "success");
-      } else if (selectedNode === 'Hydro') {
-        notify("Success!", "New Hydro node created", "success");
-      } else if (selectedNode === 'Solar') {
-        notify("Success!", "New Solar node created", "success");
-      } else if (selectedNode === 'Nuclear') {
-        notify("Success!", "New Nuclear node created", "success");
-      }
+    tier.methods.createNodeWithTokens(nodeName, node_type).send({ from: account })
+      .then(() => {
+        if (selectedNode === 'Wind') {
+          notify("Success!", "New Wind node created", "success");
+        } else if (selectedNode === 'Hydro') {
+          notify("Success!", "New Hydro node created", "success");
+        } else if (selectedNode === 'Solar') {
+          notify("Success!", "New Solar node created", "success");
+        } else if (selectedNode === 'Nuclear') {
+          notify("Success!", "New Nuclear node created", "success");
+        }
 
-      setNodeName("");
-    })
+        setNodeName("");
+      })
+      .catch(err => console.log({ "Node Creation Error: ": err }));
   }
 
-  const claimRewards = () => {
+  const claimAllRewards = () => {
+
+  }
+
+  const claimReward = (node) => {
 
   }
 
@@ -960,12 +963,12 @@ const Dashboard = () => {
                 <img src="assets/img/icons/generator.png" alt="generator" className='icon-size me-2' />
                 <span className="fs-5">Your Rewards</span>
               </div>
-              {(parseFloat(windReward) + parseFloat(hydroReward) + parseFloat(solarReward) + parseFloat(nuclearReward) === 0) ? (
+              {(windReward + hydroReward + solarReward + nuclearReward) === 0 ? (
                 <button type='button' className='white-btn my-1' disabled={true}>
                   <span className="cl-orange-gd fw-bold px-3">Claim Rewards</span>
                 </button>
               ) : (
-                <button type='button' className='white-btn my-1' onClick={claimRewards}>
+                <button type='button' className='white-btn my-1' onClick={claimAllRewards}>
                   <span className="cl-orange-gd fw-bold px-3">Claim Rewards</span>
                 </button>
               )}
@@ -974,13 +977,13 @@ const Dashboard = () => {
 
             <div className="row mx-0">
               <div className="col-6 p-0 text-start right-border">
-                <p className="mb-0 cl-white-60">{(parseFloat(userWind) * 0.003 + parseFloat(userHydro) * 0.025 + parseFloat(userSolar) * 0.1 + parseFloat(userNuclear) * 0.7).toFixed(2)} / Day</p>
-                <p className="mb-0 fs-1 cl-white-gd">{(parseFloat(windReward) + parseFloat(hydroReward) + parseFloat(solarReward) + parseFloat(nuclearReward)).toFixed(2)}</p>
+                <p className="mb-0 cl-white-60">{(userWind * 0.003 + userHydro * 0.025 + userSolar * 0.1 + userNuclear * 0.7).toFixed(3)} / Day</p>
+                <p className="mb-0 fs-1 cl-white-gd">{(windReward + hydroReward + solarReward + nuclearReward).toFixed(3)}</p>
                 <p className="mb-0 fs-5">/POWER</p>
               </div>
               <div className="col-6 p-0 text-end">
-                <p className="mb-0 cl-white-60">${((parseFloat(userWind) * 0.003 + parseFloat(userHydro) * 0.025 + parseFloat(userSolar) * 0.1 + parseFloat(userNuclear) * 0.7) * parseFloat(powerPrice)).toFixed(2)} / Day</p>
-                <p className="mb-0 fs-1 cl-white-gd">${((parseFloat(windReward) + parseFloat(hydroReward) + parseFloat(solarReward) + parseFloat(nuclearReward)) * parseFloat(powerPrice)).toFixed(2)}</p>
+                <p className="mb-0 cl-white-60">${((userWind * 0.003 + userHydro * 0.025 + userSolar * 0.1 + userNuclear * 0.7) * powerPrice).toFixed(3)} / Day</p>
+                <p className="mb-0 fs-1 cl-white-gd">${((windReward + hydroReward + solarReward + nuclearReward) * powerPrice).toFixed(2)}</p>
                 <p className="mb-0 fs-5">/USD</p>
               </div>
             </div>
@@ -1042,4 +1045,10 @@ const Dashboard = () => {
   );
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => {
+  return {
+    account: state.account.myAccount
+  }
+}
+
+export default connect(mapStateToProps)(Dashboard);

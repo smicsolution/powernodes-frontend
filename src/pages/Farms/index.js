@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useWeb3React } from "@web3-react/core";
+import { connect } from 'react-redux'
 
 import tierABI from '../../constants/ABI/tier.json';
 import tierNodeABI from '../../constants/ABI/node.json';
@@ -12,8 +13,8 @@ import isEmpty from '../../utils/is-empty';
 
 const ETHUnit = 1e18;
 
-const Farms = () => {
-  const { library, account } = useWeb3React();
+const Farms = ({ account }) => {
+  const { library } = useWeb3React();
 
   const [token, setToken] = useState(undefined);
   const [tier, setTier] = useState(undefined);
@@ -21,7 +22,7 @@ const Farms = () => {
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    if (isEmpty(library)) {
+    if (isEmpty(library) || isEmpty(account)) {
       setToken(undefined);
       setTier(undefined);
       return;
@@ -32,7 +33,7 @@ const Farms = () => {
 
     setToken(_token);
     setTier(_tier);
-  }, [library])
+  }, [library, account])
 
   useEffect(() => {
     if (isEmpty(account) || isEmpty(tier)) {
@@ -185,7 +186,7 @@ const Farms = () => {
         <div className="farms-item-field text-center">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
-              <img src="assets/img/icons/power.png" alt="mim" className='farms-icon-size me-2' />
+              <img src="assets/img/icons/fantom.png" alt="mim" className='farms-icon-size me-2' />
               <span className='cl-orange-gd fw-bold fs-5'>wFTM-Energy LP</span>
             </div>
             <span className="cl-orange-gd">5x Multiplier</span>
@@ -205,4 +206,10 @@ const Farms = () => {
   </React.Fragment>;
 }
 
-export default Farms;
+const mapStateToProps = (state) => {
+  return {
+    account: state.account.myAccount
+  }
+}
+
+export default connect(mapStateToProps)(Farms);

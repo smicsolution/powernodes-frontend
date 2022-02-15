@@ -21,16 +21,17 @@ import notify from '../../utils/notify';
 import './style.css'
 
 
-const Header = ({ showWalletModal, hideWalletModal, setAccount, myAccount, setHeaderHeight }) => {
+const Header = ({ showWalletModal, hideWalletModal, setAccount, setHeaderHeight }) => {
   const { activate, deactivate, account } = useWeb3React();
 
   const [isConnecting, setConnecting] = useState(false)
+  const [myAccount, setMyAccount] = useState(undefined);
 
   const { width, height, ref } = useResizeDetector();
 
-  useEffect(() => {
-    setAccount(account)
-  }, [account])
+  // useEffect(() => {
+  //   setAccount(account)
+  // }, [account])
 
   useEffect(() => {
     setHeaderHeight(height);
@@ -64,6 +65,7 @@ const Header = ({ showWalletModal, hideWalletModal, setAccount, myAccount, setHe
       try {
         await activate(injected);
         setAccount(account);
+        setMyAccount(account);
         hideWalletModal();
         setConnecting(false);
       } catch (ex) {
@@ -76,7 +78,8 @@ const Header = ({ showWalletModal, hideWalletModal, setAccount, myAccount, setHe
   const disconnectMetaMask = async () => {
     try {
       await deactivate();
-      setAccount(null);
+      setMyAccount(undefined);
+      setAccount(undefined);
     } catch (ex) {
       console.log(ex)
     }
@@ -134,10 +137,4 @@ Header.propTypes = {
   setAccount: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    myAccount: state.account.myAccount
-  }
-}
-
-export default connect(mapStateToProps, { showWalletModal, hideWalletModal, setHeaderHeight, setAccount })(Header);
+export default connect(null, { showWalletModal, hideWalletModal, setHeaderHeight, setAccount })(Header);
