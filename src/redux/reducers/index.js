@@ -7,6 +7,7 @@ import account from './account'
 import sidebar from './sidebarHeight'
 import screen from './screen'
 import contentScreen from './contentScreen'
+import generatorScreen from './generatorScreen'
 
 export default combineReducers({
   modal,
@@ -15,5 +16,6 @@ export default combineReducers({
   account,
   sidebar,
   screen,
-  contentScreen
+  contentScreen,
+  generatorScreen
 });

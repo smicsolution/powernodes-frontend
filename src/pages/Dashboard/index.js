@@ -4,6 +4,7 @@ import { IoTrashBinSharp } from 'react-icons/io5'
 import { useResizeDetector } from 'react-resize-detector'
 import { useWeb3React } from "@web3-react/core";
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import tierABI from '../../constants/ABI/tier.json';
 import tierNodeABI from '../../constants/ABI/node.json';
@@ -16,6 +17,8 @@ import NodeItem from '../../components/NodeItem';
 
 import isEmpty from '../../utils/is-empty';
 import notify from '../../utils/notify';
+
+import { setGeneratorWidth } from '../../redux/actions/generatorScreen'
 
 const nodeArray = [
   {
@@ -125,7 +128,7 @@ const nodeArray = [
   }
 ]
 
-const Dashboard = ({ account, contentScreen }) => {
+const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   const { library } = useWeb3React();
 
   const { width, height, ref } = useResizeDetector();
@@ -146,6 +149,10 @@ const Dashboard = ({ account, contentScreen }) => {
   const [nodeCard, setNodeCard] = useState("col-6");
   const [createPadding, setCreatePadding] = useState("ps-0 pe-2");
   const [rewardPadding, setRewardPadding] = useState("ps-2 pe-0");
+  const [rpcGrid, setRPCGrid] = useState("col-1");
+  const [typeGrid, setTypeGrid] = useState("col-3");
+  const [nameGrid, setNameGrid] = useState("col-4");
+  const [rewardGrid, setRewardGrid] = useState("col-4");
 
   const [token, setToken] = useState(undefined);
   const [tier, setTier] = useState(undefined);
@@ -462,12 +469,51 @@ const Dashboard = ({ account, contentScreen }) => {
   }, [windNode, hydroNode, solarNode, nuclearNode])
 
   useEffect(() => {
+    setGeneratorWidth(width);
+
     if (width > 430) {
       setLeftField("ps-0 pe-2");
       setRightField("pe-0 ps-2");
     } else {
       setLeftField("p-0");
       setRightField("p-0");
+    }
+
+    if (width > 700) {
+      setRPCGrid("col-1");
+      setTypeGrid("col-3");
+      setNameGrid("col-4");
+      setRewardGrid("col-4");
+    } else if (width > 600 && width <= 700) {
+      setRPCGrid("col-1");
+      setTypeGrid("col-3");
+      setNameGrid("col-3");
+      setRewardGrid("col-5");
+    } else if (width > 510 && width <= 600) {
+      setRPCGrid("col-1");
+      setTypeGrid("col-2");
+      setNameGrid("col-3");
+      setRewardGrid("col-6");
+    } else if (width > 450 && width <= 510) {
+      setRPCGrid("col-1");
+      setTypeGrid("col-2");
+      setNameGrid("col-2");
+      setRewardGrid("col-7");
+    } else if (width > 400 && width <= 450) {
+      setRPCGrid("col-1");
+      setTypeGrid("col-2");
+      setNameGrid("col-3");
+      setRewardGrid("col-6");
+    } else if (width > 350 && width <= 400) {
+      setRPCGrid("col-1");
+      setTypeGrid("col-2");
+      setNameGrid("col-4");
+      setRewardGrid("col-5");
+    } else {
+      setRPCGrid("col-2");
+      setTypeGrid("col-2");
+      setNameGrid("col-4");
+      setRewardGrid("col-4");
     }
   }, [width])
 
@@ -1042,37 +1088,20 @@ const Dashboard = ({ account, contentScreen }) => {
 
           <div className="node-list-field" style={{ height: `${height - 250}px` }}>
             <p className="mb-1 fs-5 cl-orange-gd">Your Generators</p>
-            {width > 390 ? (
-              <div className="row mx-0 my-2" id='node-list-header'>
-                <div className="col-1">
-                  <span className="cl-white-40">RPC</span>
-                </div>
-                <div className="col-2">
-                  <span className="cl-white-40">Type</span>
-                </div>
-                <div className="col-3">
-                  <span className="cl-white-40">Name</span>
-                </div>
-                <div className="col-6">
-                  <span className="cl-white-40">Rewards</span>
-                </div>
+            <div className="row mx-0 my-2" id='node-list-header'>
+              <div className={`${rpcGrid}`}>
+                <span className="cl-white-40">RPC</span>
               </div>
-            ) : (
-              <div className="row mx-0 my-2" id='node-list-header'>
-                <div className="col-5">
-                  <span className="cl-white-40">RPC</span>
-                </div>
-                <div className="col-7">
-                  <span className="cl-white-40">Type</span>
-                </div>
-                <div className="col-5">
-                  <span className="cl-white-40">Name</span>
-                </div>
-                <div className="col-7">
-                  <span className="cl-white-40">Rewards</span>
-                </div>
+              <div className={`${typeGrid}`}>
+                <span className="cl-white-40">Type</span>
               </div>
-            )}
+              <div className={`${nameGrid}`}>
+                <span className="cl-white-40">Name</span>
+              </div>
+              <div className={`${rewardGrid}`}>
+                <span className="cl-white-40">Rewards</span>
+              </div>
+            </div>
 
             {(userWind + userHydro + userSolar + userNuclear) === 0 ? (
               <div className="d-flex justify-content-center align-items-center my-5">
@@ -1096,6 +1125,11 @@ const Dashboard = ({ account, contentScreen }) => {
   );
 }
 
+Dashboard.propTypes = {
+  setGeneratorWidth: PropTypes.func.isRequired,
+  contentScreen: PropTypes.object.isRequired,
+}
+
 const mapStateToProps = (state) => {
   return {
     account: state.account.myAccount,
@@ -1103,4 +1137,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps, { setGeneratorWidth })(Dashboard);
