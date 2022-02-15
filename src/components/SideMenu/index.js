@@ -18,6 +18,7 @@ import { GiTwoCoins, GiCheckMark } from 'react-icons/gi'
 import { HiOutlineCurrencyDollar } from 'react-icons/hi'
 import { MdTimeline, MdOutlineOfflineBolt } from 'react-icons/md'
 import { AiFillApi } from 'react-icons/ai'
+import { FaAngleDoubleRight } from 'react-icons/fa'
 
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -28,8 +29,8 @@ import './style.css';
 import { hideSideMenu, showSideMenu } from '../../redux/actions/sidemenu'
 import { setSidebarHeight } from '../../redux/actions/sidebarHeight'
 
-const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header, setSidebarHeight }) => {
-  const [menuCollapse, setMenuCollapse] = useState(true);
+const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header, setSidebarHeight, screen }) => {
+  const [menuCollapse, setMenuCollapse] = useState(false);
   const { width, height, ref } = useResizeDetector();
 
   useEffect(() => {
@@ -40,26 +41,32 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header, setSidebarHeig
     setSidebarHeight(height);
   }, [height])
 
+  useEffect(() => {
+    if (screen.width <= 700)
+      ref.current.style.position = "absolute";
+    else ref.current.style.position = "relative";
+  }, [screen])
+
   const menuIconClick = () => {
-    menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
+    menuCollapse ? showSideMenu() : hideSideMenu();
   };
 
-  const onMouseEnter = () => {
-    showSideMenu();
-  }
+  // const onMouseEnter = () => {
+  //   showSideMenu();
+  // }
 
-  const onMouseLeave = () => {
-    hideSideMenu();
-  }
+  // const onMouseLeave = () => {
+  //   hideSideMenu();
+  // }
 
   return <React.Fragment>
-    <div className='sidemenu-field' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} ref={ref}>
+    <div className='sidemenu-field' ref={ref}>
       <ProSidebar collapsed={menuCollapse}>
-        <SidebarHeader className={`sidebar-header ${menuCollapse ? 'justify-content-center' : 'justify-content-between'}`}>
+        <SidebarHeader className={`sidebar-header ${menuCollapse ? 'justify-content-center py-4 px-0' : 'justify-content-between'}`}>
           <p className='mb-0'>{menuCollapse ? "" : "DASHBOARD"}</p>
           <div className='close-menu-btn fs-5' onClick={menuIconClick}>
             {menuCollapse ? (
-              null
+              <FaAngleDoubleRight />
             ) : (
               <RiCloseLine />
             )}
@@ -126,13 +133,15 @@ SideMenu.propTypes = {
   hideSideMenu: PropTypes.func.isRequired,
   setSidebarHeight: PropTypes.func.isRequired,
   sidemenu: PropTypes.object.isRequired,
-  header: PropTypes.object.isRequired
+  header: PropTypes.object.isRequired,
+  screen: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => {
   return {
     sidemenu: state.sidemenu,
-    header: state.header
+    header: state.header,
+    screen: state.screen
   }
 }
 

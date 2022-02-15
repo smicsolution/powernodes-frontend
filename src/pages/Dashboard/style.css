@@ -4,30 +4,33 @@
   border-radius: 0.5rem;
   padding: 1rem;
   width: 100%;
-  height: 200px;
+  height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-@media only screen and (max-width: 992px) {
-  .total-field,
-  .fantom-price-field {
+/* @media only screen and (max-width: 1000px) {
+  .total-field {
     padding: 0 0.5rem 0 0!important;
   }
 
   .power-price-field {
     padding: 0 0 0 0.5rem!important;
   }
+
+  .fantom-price-field {
+    padding: 0!important;
+  }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 650px) {
   .total-field,
   .fantom-price-field,
   .power-price-field {
     padding: 0!important;
   }
-}
+} */
 
 .border-top {
   border-top: 1px solid #292A2F!important;

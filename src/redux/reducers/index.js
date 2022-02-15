@@ -5,11 +5,15 @@ import sidemenu from './sidemenu'
 import header from './headerHeight'
 import account from './account'
 import sidebar from './sidebarHeight'
+import screen from './screen'
+import contentScreen from './contentScreen'
 
 export default combineReducers({
   modal,
   sidemenu,
   header,
   account,
-  sidebar
+  sidebar,
+  screen,
+  contentScreen
 });

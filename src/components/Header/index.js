@@ -13,6 +13,7 @@ import { injected } from "../../constants/WalletConnectors";
 import { showWalletModal, hideWalletModal } from '../../redux/actions/modal'
 import { setAccount } from '../../redux/actions/account'
 import { setHeaderHeight } from '../../redux/actions/headerHeight'
+import { setWidth } from '../../redux/actions/screen'
 
 import SelectWalletModal from '../SelectWalletModal'
 
@@ -21,21 +22,29 @@ import notify from '../../utils/notify';
 import './style.css'
 
 
-const Header = ({ showWalletModal, hideWalletModal, setAccount, setHeaderHeight }) => {
+const Header = ({ showWalletModal, hideWalletModal, setAccount, setHeaderHeight, setWidth }) => {
   const { activate, deactivate, account } = useWeb3React();
 
   const [isConnecting, setConnecting] = useState(false)
   const [myAccount, setMyAccount] = useState(undefined);
+  const [btnStatus, setBtnStatus] = useState(true);
 
   const { width, height, ref } = useResizeDetector();
 
-  // useEffect(() => {
-  //   setAccount(account)
-  // }, [account])
+  useEffect(() => {
+    if (btnStatus) {
+      setAccount(account);
+      setMyAccount(account);
+    }
+  }, [account])
 
   useEffect(() => {
     setHeaderHeight(height);
   }, [height])
+
+  useEffect(() => {
+    setWidth(width);
+  }, [width])
 
   const showSelectWalletModal = () => {
     showWalletModal()
@@ -68,6 +77,7 @@ const Header = ({ showWalletModal, hideWalletModal, setAccount, setHeaderHeight 
         setMyAccount(account);
         hideWalletModal();
         setConnecting(false);
+        setBtnStatus(true);
       } catch (ex) {
         setConnecting(false);
         console.log(ex)
@@ -80,6 +90,7 @@ const Header = ({ showWalletModal, hideWalletModal, setAccount, setHeaderHeight 
       await deactivate();
       setMyAccount(undefined);
       setAccount(undefined);
+      setBtnStatus(false);
     } catch (ex) {
       console.log(ex)
     }
@@ -135,6 +146,7 @@ Header.propTypes = {
   hideWalletModal: PropTypes.func.isRequired,
   setHeaderHeight: PropTypes.func.isRequired,
   setAccount: PropTypes.func.isRequired,
+  setWidth: PropTypes.func.isRequired,
 };
 
-export default connect(null, { showWalletModal, hideWalletModal, setHeaderHeight, setAccount })(Header);
+export default connect(null, { showWalletModal, hideWalletModal, setHeaderHeight, setAccount, setWidth })(Header);

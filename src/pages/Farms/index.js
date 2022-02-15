@@ -13,8 +13,10 @@ import isEmpty from '../../utils/is-empty';
 
 const ETHUnit = 1e18;
 
-const Farms = ({ account }) => {
+const Farms = ({ account, contentScreen }) => {
   const { library } = useWeb3React();
+
+  const [cardGrid, setCardGrid] = useState("col-4");
 
   const [token, setToken] = useState(undefined);
   const [tier, setTier] = useState(undefined);
@@ -51,6 +53,17 @@ const Farms = ({ account }) => {
     return () => clearInterval(itv);
   }, [account, tier]);
 
+  useEffect(() => {
+    if (contentScreen.width > 1100) {
+      setCardGrid("col-4");
+    } else if (contentScreen.width > 720 && contentScreen.width <= 1100) {
+      setCardGrid("col-6");
+    } else {
+      setCardGrid("col-12");
+    }
+    // console.log(contentScreen.width)
+  }, [contentScreen])
+
   return <React.Fragment>
     <div className="d-flex justify-content-between align-items-end">
       <span className="cl-orange fs-4 fw-bold">Farms</span>
@@ -62,7 +75,7 @@ const Farms = ({ account }) => {
     </div>
 
     <div className="row mx-0 d-flex justify-content-center">
-      <div className="col-xl-4 col-lg-6 col-md-6">
+      <div className={`${cardGrid}`}>
         <div className="farms-item-field text-center">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
@@ -82,7 +95,7 @@ const Farms = ({ account }) => {
         </div>
       </div>
 
-      <div className="col-xl-4 col-lg-6 col-md-6">
+      <div className={`${cardGrid}`}>
         <div className="farms-item-field text-center">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
@@ -102,7 +115,7 @@ const Farms = ({ account }) => {
         </div>
       </div>
 
-      <div className="col-xl-4 col-lg-6 col-md-6">
+      <div className={`${cardGrid}`}>
         <div className="farms-item-field text-center">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
@@ -122,7 +135,7 @@ const Farms = ({ account }) => {
         </div>
       </div>
 
-      <div className="col-xl-4 col-lg-6 col-md-6">
+      <div className={`${cardGrid}`}>
         <div className="farms-item-field text-center">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
@@ -142,7 +155,7 @@ const Farms = ({ account }) => {
         </div>
       </div>
 
-      <div className="col-xl-4 col-lg-6 col-md-6">
+      <div className={`${cardGrid}`}>
         <div className="farms-item-field text-center">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
@@ -162,7 +175,7 @@ const Farms = ({ account }) => {
         </div>
       </div>
 
-      <div className="col-xl-4 col-lg-6 col-md-6">
+      <div className={`${cardGrid}`}>
         <div className="farms-item-field text-center">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
@@ -182,7 +195,7 @@ const Farms = ({ account }) => {
         </div>
       </div>
 
-      <div className="col-xl-4 col-lg-6 col-md-6">
+      <div className={`${cardGrid}`}>
         <div className="farms-item-field text-center">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
@@ -208,7 +221,8 @@ const Farms = ({ account }) => {
 
 const mapStateToProps = (state) => {
   return {
-    account: state.account.myAccount
+    account: state.account.myAccount,
+    contentScreen: state.contentScreen,
   }
 }
 

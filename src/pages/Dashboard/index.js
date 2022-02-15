@@ -125,7 +125,7 @@ const nodeArray = [
   }
 ]
 
-const Dashboard = ({ account }) => {
+const Dashboard = ({ account, contentScreen }) => {
   const { library } = useWeb3React();
 
   const { width, height, ref } = useResizeDetector();
@@ -139,6 +139,13 @@ const Dashboard = ({ account }) => {
   });
   const [nodeLeftField, setLeftField] = useState("ps-0 pe-2");
   const [nodeRightField, setRightField] = useState("pe-0 ps-2");
+  const [cardGrid, setCardGrid] = useState("col-4");
+  const [totalPadding, setTotalPadding] = useState("ps-0 pe-3");
+  const [powerPadding, setPowerPadding] = useState("px-1");
+  const [fantomPadding, setFantomPadding] = useState("ps-3 pe-0");
+  const [nodeCard, setNodeCard] = useState("col-6");
+  const [createPadding, setCreatePadding] = useState("ps-0 pe-2");
+  const [rewardPadding, setRewardPadding] = useState("ps-2 pe-0");
 
   const [token, setToken] = useState(undefined);
   const [tier, setTier] = useState(undefined);
@@ -309,12 +316,12 @@ const Dashboard = ({ account }) => {
       tier.methods.getNodeNumberOf(account, "FLATVERSAL").call().then(_wind => {
         if (_wind != 0) {
           tier.methods.getRewardAmountOf(account, "FLATVERSAL").call().then((_windReward) => {
-            console.log(parseFloat(_windReward) / ETHUnit)
+            // console.log(parseFloat(_windReward) / ETHUnit)
             setWindReward(parseFloat(_windReward) / ETHUnit);
           })
           wind.methods._getNodesNames(account).call().then((names) => {
             wind.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              console.log(rewards)
+              // console.log(rewards)
               wind.methods._getNodesCreationTime(account).call().then(creationTimes => {
                 let tmp = [];
                 let nameArray = names.split("#");
@@ -329,7 +336,7 @@ const Dashboard = ({ account }) => {
                     type: "Wind"
                   });
                 }
-                console.log(creationTimes)
+                // console.log(creationTimes)
                 setWindNode(tmp);
               })
             })
@@ -348,17 +355,22 @@ const Dashboard = ({ account }) => {
           })
           hydro.methods._getNodesNames(account).call().then((names) => {
             hydro.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              let tmp = [];
-              let nameArray = names.split("#");
-              let rewardArray = rewards.split("#");
-              for (let i = 0; i < nameArray.length; i++) {
-                tmp.push({
-                  name: nameArray[i],
-                  reward: rewardArray[i],
-                  type: "Hydro"
-                });
-              }
-              setHydroNode(tmp);
+              hydro.methods._getNodesCreationTime(account).call().then(creationTimes => {
+                let tmp = [];
+                let nameArray = names.split("#");
+                let rewardArray = rewards.split("#");
+                let creationTimeArray = creationTimes.split("#");
+
+                for (let i = 0; i < nameArray.length; i++) {
+                  tmp.push({
+                    name: nameArray[i],
+                    reward: rewardArray[i],
+                    creationTime: creationTimeArray[i],
+                    type: "Hydro"
+                  });
+                }
+                setHydroNode(tmp);
+              })
             })
           });
         } else {
@@ -375,17 +387,22 @@ const Dashboard = ({ account }) => {
           })
           solar.methods._getNodesNames(account).call().then((names) => {
             solar.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              let tmp = [];
-              let nameArray = names.split("#");
-              let rewardArray = rewards.split("#");
-              for (let i = 0; i < nameArray.length; i++) {
-                tmp.push({
-                  name: nameArray[i],
-                  reward: rewardArray[i],
-                  type: "Solar"
-                });
-              }
-              setSolarNode(tmp);
+              solar.methods._getNodesCreationTime(account).call().then(creationTimes => {
+                let tmp = [];
+                let nameArray = names.split("#");
+                let rewardArray = rewards.split("#");
+                let creationTimeArray = creationTimes.split("#");
+
+                for (let i = 0; i < nameArray.length; i++) {
+                  tmp.push({
+                    name: nameArray[i],
+                    reward: rewardArray[i],
+                    creationTime: creationTimeArray[i],
+                    type: "Solar"
+                  });
+                }
+                setSolarNode(tmp);
+              })
             })
           });
         } else {
@@ -402,17 +419,22 @@ const Dashboard = ({ account }) => {
           })
           nuclear.methods._getNodesNames(account).call().then((names) => {
             nuclear.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              let tmp = [];
-              let nameArray = names.split("#");
-              let rewardArray = rewards.split("#");
-              for (let i = 0; i < nameArray.length; i++) {
-                tmp.push({
-                  name: nameArray[i],
-                  reward: rewardArray[i],
-                  type: "Nuclear"
-                });
-              }
-              setNuclearNode(tmp);
+              solar.methods._getNodesCreationTime(account).call().then(creationTimes => {
+                let tmp = [];
+                let nameArray = names.split("#");
+                let rewardArray = rewards.split("#");
+                let creationTimeArray = creationTimes.split("#");
+
+                for (let i = 0; i < nameArray.length; i++) {
+                  tmp.push({
+                    name: nameArray[i],
+                    reward: rewardArray[i],
+                    creationTime: creationTimeArray[i],
+                    type: "Nuclear"
+                  });
+                }
+                setNuclearNode(tmp);
+              })
             })
           });
         } else {
@@ -448,6 +470,35 @@ const Dashboard = ({ account }) => {
       setRightField("p-0");
     }
   }, [width])
+
+  useEffect(() => {
+    if (contentScreen.width > 1000) {
+      setCardGrid("col-4");
+      setTotalPadding("ps-0 pe-3");
+      setPowerPadding("px-1");
+      setFantomPadding("ps-3 pe-0");
+    } else if (contentScreen.width > 650 && contentScreen.width <= 1000) {
+      setCardGrid("col-6");
+      setTotalPadding("ps-0 pe-2");
+      setPowerPadding("ps-2 pe-0");
+      setFantomPadding("px-1");
+    } else if (contentScreen.width <= 650) {
+      setCardGrid("col-12");
+      setTotalPadding("px-0");
+      setPowerPadding("px-0");
+      setFantomPadding("px-0");
+    }
+
+    if (contentScreen.width > 750) {
+      setNodeCard("col-6");
+      setCreatePadding("ps-0 pe-2");
+      setRewardPadding("ps-2 pe-0");
+    } else {
+      setNodeCard("col-12");
+      setCreatePadding("px-0");
+      setRewardPadding("px-0");
+    }
+  }, [contentScreen])
 
   const onSelectNode = e => {
     setSelectedNode(e.target.id);
@@ -595,8 +646,8 @@ const Dashboard = ({ account }) => {
         </div>
       </div>
 
-      <div className="row mx-0 mt-3">
-        <div className="col-lg-4 col-md-6 total-field my-2 ps-0 pe-3">
+      <div className="row mx-0 mt-3 d-flex justify-content-center">
+        <div className={`${cardGrid} ${totalPadding} my-2`}>
           <div className="dasboard-card">
             <p className="mb-0 cl-orange-gd fw-bold fs-5">Total Generators</p>
             <div>
@@ -634,7 +685,7 @@ const Dashboard = ({ account }) => {
           </div>
         </div>
 
-        <div className="col-lg-4 col-md-6 power-price-field my-2 px-1">
+        <div className={`${cardGrid} ${powerPadding} my-2`}>
           <div className="dasboard-card">
             <div className="d-flex justify-content-between align-items-end">
               <div className='d-flex align-items-center'>
@@ -661,7 +712,7 @@ const Dashboard = ({ account }) => {
           </div>
         </div>
 
-        <div className="col-lg-4 col-md-6 fantom-price-field my-2 pe-0 ps-3">
+        <div className={`${cardGrid} ${fantomPadding} my-2`}>
           <div className="dasboard-card">
             <div className="d-flex justify-content-between align-items-end">
               <div className='d-flex align-items-center'>
@@ -691,7 +742,7 @@ const Dashboard = ({ account }) => {
       </div>
 
       <div className="row mx-0 mt-3">
-        <div className="col-md-6 ps-0 pe-2 node-field my-2" ref={ref}>
+        <div className={`${nodeCard} ${createPadding} node-field my-2`} ref={ref}>
           <div className="node-card">
             <div className="d-flex justify-content-between align-items-end">
               <span className='cl-orange-gd fw-bold fs-5'>Create a Generator</span>
@@ -956,7 +1007,7 @@ const Dashboard = ({ account }) => {
           </div>
         </div>
 
-        <div className="col-md-6 ps-2 pe-0 node-field my-2">
+        <div className={`${nodeCard} ${rewardPadding} node-field my-2`}>
           <div className="reward-field d-flex flex-column justify-content-between">
             <div className="d-flex justify-content-between flex-wrap">
               <div className="d-flex align-items-center my-1">
@@ -1047,7 +1098,8 @@ const Dashboard = ({ account }) => {
 
 const mapStateToProps = (state) => {
   return {
-    account: state.account.myAccount
+    account: state.account.myAccount,
+    contentScreen: state.contentScreen,
   }
 }
 

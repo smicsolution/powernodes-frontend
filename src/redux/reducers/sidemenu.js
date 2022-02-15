@@ -1,7 +1,7 @@
 import { SHOW_SIDEMENU, HIDE_SIDEMENU } from '../actions/types';
 
 const initialState = {
-  isVisibleSidemenu: true
+  isVisibleSidemenu: false
 };
 
 function sidemenuReducer (state = initialState, action) {
