@@ -21,6 +21,8 @@ import notify from '../../utils/notify';
 
 import './style.css'
 
+import { tokenAddr } from '../../constants/Addresses';
+
 
 const Header = ({ showWalletModal, hideWalletModal, setAccount, setHeaderHeight, setWidth }) => {
   const { activate, deactivate, account } = useWeb3React();
@@ -114,10 +116,20 @@ const Header = ({ showWalletModal, hideWalletModal, setAccount, setHeaderHeight,
                   {myAccount ? (
                     <span className='cl-gray ms-4'>{myAccount.substr(0, 7)}...{myAccount.slice(-4)}</span>
                   ) : null}
-                  <button type='button' className='dark-btn ms-4 my-2'>
+                  {/* <button type='button' className='dark-btn ms-4 my-2'>
                     <img src="assets/img/icons/power.png" alt="power" className='btn-preimg' />
                     <span className='cl-orange-gd mx-4 fw-bold text-center w-full'>Buy Power</span>
-                  </button>
+                  </button> */}
+                  <a
+                    type='button'
+                    href={`https://spookyswap.finance/swap?outputCurrency=${tokenAddr}`}
+                    target="_blank"
+                    rel='noreferrer'
+                    className='dark-btn ms-4 my-2'
+                  >
+                    <img src="assets/img/icons/power.png" alt="power" className='btn-preimg' />
+                    <span className='cl-orange-gd mx-4 fw-bold text-center w-full'>Buy Power</span>
+                  </a>
                   {myAccount ? (
                     <button type='button' className='orange-btn ms-4 my-2' onClick={disconnectMetaMask}>
                       <img src="assets/img/icons/connect2.png" alt="connect2" className='btn-preimg' />

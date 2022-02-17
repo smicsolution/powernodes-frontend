@@ -83,7 +83,10 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header, setSidebarHeig
               Farms
               <Link to="/farms" />
             </MenuItem>
-            <MenuItem icon={<HiOutlineCurrencyDollar />}>Treasury</MenuItem>
+            <MenuItem icon={<HiOutlineCurrencyDollar />}>
+              Treasury
+              <a href="https://treasury.powernode.io/" target="_self" />
+            </MenuItem>
             <MenuItem icon={<MdTimeline />}>White Paper</MenuItem>
             <MenuItem icon={<IoShareSocialOutline />}>Social Feeds</MenuItem>
           </Menu>

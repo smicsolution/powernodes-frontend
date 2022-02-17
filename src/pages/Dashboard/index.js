@@ -5,6 +5,7 @@ import { useResizeDetector } from 'react-resize-detector'
 import { useWeb3React } from "@web3-react/core";
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { BigNumber } from "@ethersproject/bignumber";
 
 import tierABI from '../../constants/ABI/tier.json';
 import tierNodeABI from '../../constants/ABI/node.json';
@@ -195,6 +196,7 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
 
   const ETHUnit = 1e18;
   const MaxUint256 = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+
   const nodePrice = [1, 5, 10, 50];
 
   useEffect(() => {
@@ -323,29 +325,23 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
       tier.methods.getNodeNumberOf(account, "FLATVERSAL").call().then(_wind => {
         if (_wind != 0) {
           tier.methods.getRewardAmountOf(account, "FLATVERSAL").call().then((_windReward) => {
-            // console.log(parseFloat(_windReward) / ETHUnit)
             setWindReward(parseFloat(_windReward) / ETHUnit);
           })
           wind.methods._getNodesNames(account).call().then((names) => {
-            wind.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              // console.log(rewards)
-              wind.methods._getNodesCreationTime(account).call().then(creationTimes => {
-                let tmp = [];
-                let nameArray = names.split("#");
-                let rewardArray = rewards.split("#");
-                let creationTimeArray = creationTimes.split("#");
+            wind.methods._getNodesCreationTime(account).call().then(creationTimes => {
+              let tmp = [];
+              let nameArray = names.split("#");
+              let creationTimeArray = creationTimes.split("#");
 
-                for (let i = 0; i < nameArray.length; i++) {
-                  tmp.push({
-                    name: nameArray[i],
-                    reward: rewardArray[i],
-                    creationTime: creationTimeArray[i],
-                    type: "Wind"
-                  });
-                }
-                // console.log(creationTimes)
-                setWindNode(tmp);
-              })
+              for (let i = 0; i < nameArray.length; i++) {
+                tmp.push({
+                  name: nameArray[i],
+                  creationTime: creationTimeArray[i],
+                  type: "Wind"
+                });
+              }
+
+              setWindNode(tmp);
             })
           });
         } else {
@@ -361,23 +357,20 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
             setHydroReward(parseFloat(_hydroReward) / ETHUnit);
           })
           hydro.methods._getNodesNames(account).call().then((names) => {
-            hydro.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              hydro.methods._getNodesCreationTime(account).call().then(creationTimes => {
-                let tmp = [];
-                let nameArray = names.split("#");
-                let rewardArray = rewards.split("#");
-                let creationTimeArray = creationTimes.split("#");
+            hydro.methods._getNodesCreationTime(account).call().then(creationTimes => {
+              let tmp = [];
+              let nameArray = names.split("#");
+              let creationTimeArray = creationTimes.split("#");
 
-                for (let i = 0; i < nameArray.length; i++) {
-                  tmp.push({
-                    name: nameArray[i],
-                    reward: rewardArray[i],
-                    creationTime: creationTimeArray[i],
-                    type: "Hydro"
-                  });
-                }
-                setHydroNode(tmp);
-              })
+              for (let i = 0; i < nameArray.length; i++) {
+                tmp.push({
+                  name: nameArray[i],
+                  creationTime: creationTimeArray[i],
+                  type: "Hydro"
+                });
+              }
+
+              setHydroNode(tmp);
             })
           });
         } else {
@@ -393,23 +386,20 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
             setSolarReward(parseFloat(_solarReward) / ETHUnit);
           })
           solar.methods._getNodesNames(account).call().then((names) => {
-            solar.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              solar.methods._getNodesCreationTime(account).call().then(creationTimes => {
-                let tmp = [];
-                let nameArray = names.split("#");
-                let rewardArray = rewards.split("#");
-                let creationTimeArray = creationTimes.split("#");
+            solar.methods._getNodesCreationTime(account).call().then(creationTimes => {
+              let tmp = [];
+              let nameArray = names.split("#");
+              let creationTimeArray = creationTimes.split("#");
 
-                for (let i = 0; i < nameArray.length; i++) {
-                  tmp.push({
-                    name: nameArray[i],
-                    reward: rewardArray[i],
-                    creationTime: creationTimeArray[i],
-                    type: "Solar"
-                  });
-                }
-                setSolarNode(tmp);
-              })
+              for (let i = 0; i < nameArray.length; i++) {
+                tmp.push({
+                  name: nameArray[i],
+                  creationTime: creationTimeArray[i],
+                  type: "Solar"
+                });
+              }
+
+              setSolarNode(tmp);
             })
           });
         } else {
@@ -425,23 +415,20 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
             setNuclearReward(parseFloat(_nuclearReward) / ETHUnit);
           })
           nuclear.methods._getNodesNames(account).call().then((names) => {
-            nuclear.methods._getNodesRewardAvailable(account).call().then((rewards) => {
-              solar.methods._getNodesCreationTime(account).call().then(creationTimes => {
-                let tmp = [];
-                let nameArray = names.split("#");
-                let rewardArray = rewards.split("#");
-                let creationTimeArray = creationTimes.split("#");
+            nuclear.methods._getNodesCreationTime(account).call().then(creationTimes => {
+              let tmp = [];
+              let nameArray = names.split("#");
+              let creationTimeArray = creationTimes.split("#");
 
-                for (let i = 0; i < nameArray.length; i++) {
-                  tmp.push({
-                    name: nameArray[i],
-                    reward: rewardArray[i],
-                    creationTime: creationTimeArray[i],
-                    type: "Nuclear"
-                  });
-                }
-                setNuclearNode(tmp);
-              })
+              for (let i = 0; i < nameArray.length; i++) {
+                tmp.push({
+                  name: nameArray[i],
+                  creationTime: creationTimeArray[i],
+                  type: "Nuclear"
+                });
+              }
+
+              setNuclearNode(tmp);
             })
           });
         } else {
@@ -456,13 +443,23 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   }, [account, tier, wind, hydro, solar, nuclear]);
 
   useEffect(() => {
+    if (isEmpty(account)) return;
+
     let nodeItems;
     let myNodeItemsComponents;
 
     nodeItems = nuclearNode.concat(solarNode).concat(hydroNode).concat(windNode);
 
+    nodeItems.sort((a, b) => {
+      var x = a.creationTime.toLowerCase();
+      var y = b.creationTime.toLowerCase();
+      if (x < y) { return -1; }
+      if (x > y) { return 1; }
+      return 0;
+    });
+
     myNodeItemsComponents = nodeItems.map((item, index) => {
-      return <NodeItem key={index} type={item.type} name={item.name} rewards={item.reward} />
+      return <NodeItem key={index} type={item.type} name={item.name} creationTime={item.creationTime} />
     });
 
     setMyNodeItems(myNodeItemsComponents);
@@ -670,11 +667,11 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   }
 
   const claimAllRewards = () => {
-
-  }
-
-  const claimReward = (node) => {
-
+    tier.methods.cashoutAllTiers().send({ from: account })
+      .then(() => {
+        notify("Rewards claimed!", "Check your wallet for your rewards!", "info");
+      })
+      .catch(err => console.log({ "Claim Rewards Error: ": err }));
   }
 
   const inputNodeName = e => {
@@ -1115,7 +1112,6 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
                 {myNodeItems}
               </div>
             )}
-
 
           </div>
         </div>

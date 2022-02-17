@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
+import { useWeb3React } from "@web3-react/core";
 
 import './style.css'
 
+import tierABI from '../../constants/ABI/tier.json';
+import tierNodeABI from '../../constants/ABI/node.json';
+import tokenABI from '../../constants/ABI/token.json';
+import { tierAddr, tierNode, tokenAddr, ftmAddr, usdtAddr, ftm_usdt_lp, ftm_power_lp } from '../../constants/Addresses';
+import isEmpty from '../../utils/is-empty';
+import notify from '../../utils/notify';
+
 const ETHUnit = 1e18;
 
-const NodeItem = ({ type, name, rewards, generatorScreen }) => {
+const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
+  const { library } = useWeb3React();
   let nameColor;
 
   const [btnTitle, setBtnTitle] = useState("Claim Rewards");
@@ -14,6 +23,13 @@ const NodeItem = ({ type, name, rewards, generatorScreen }) => {
   const [typeGrid, setTypeGrid] = useState("col-3");
   const [nameGrid, setNameGrid] = useState("col-4");
   const [rewardGrid, setRewardGrid] = useState("col-4");
+
+  const [wind, setWind] = useState(undefined);
+  const [hydro, setHydro] = useState(undefined);
+  const [solar, setSolar] = useState(undefined);
+  const [nuclear, setNuclear] = useState(undefined);
+
+  const [reward, setReward] = useState(0);
 
   useEffect(() => {
     if (generatorScreen.width > 700) {
@@ -59,8 +75,57 @@ const NodeItem = ({ type, name, rewards, generatorScreen }) => {
       setNameGrid("col-4");
       setRewardGrid("col-4");
     }
-    console.log(generatorScreen.width)
   }, [generatorScreen])
+
+  useEffect(() => {
+    if (isEmpty(library) || isEmpty(account)) {
+      setWind(undefined);
+      setHydro(undefined);
+      setSolar(undefined);
+      setNuclear(undefined);
+      return;
+    }
+
+    const _wind = new library.eth.Contract(tierNodeABI, tierNode.wind);
+    const _hydro = new library.eth.Contract(tierNodeABI, tierNode.hydro);
+    const _solar = new library.eth.Contract(tierNodeABI, tierNode.solar);
+    const _nuclear = new library.eth.Contract(tierNodeABI, tierNode.nuclear);
+
+    setWind(_wind);
+    setHydro(_hydro);
+    setSolar(_solar);
+    setNuclear(_nuclear);
+  }, [library, account])
+
+  useEffect(() => {
+    if (isEmpty(account) || isEmpty(wind)) return;
+
+    const itv = setInterval(() => {
+      if (type === "Wind") {
+        wind.methods._getRewardAmountOf(account, creationTime).call()
+          .then(_reward => {
+            setReward(parseFloat(_reward) / ETHUnit);
+          })
+      } else if (type === "Hydro") {
+        hydro.methods._getRewardAmountOf(account, creationTime).call()
+          .then(_reward => {
+            setReward(parseFloat(_reward) / ETHUnit);
+          })
+      } else if (type === "Solar") {
+        solar.methods._getRewardAmountOf(account, creationTime).call()
+          .then(_reward => {
+            setReward(parseFloat(_reward) / ETHUnit);
+          })
+      } else if (type === "Nuclear") {
+        nuclear.methods._getRewardAmountOf(account, creationTime).call()
+          .then(_reward => {
+            setReward(parseFloat(_reward) / ETHUnit);
+          })
+      }
+    }, 3000);
+
+    return () => clearInterval(itv);
+  }, [wind, hydro, solar, nuclear, account])
 
   if (type === "Nuclear") {
     nameColor = "cl-nuclear";
@@ -70,6 +135,16 @@ const NodeItem = ({ type, name, rewards, generatorScreen }) => {
     nameColor = "cl-hydro";
   } else if (type === "Wind") {
     nameColor = "cl-wind";
+  }
+
+  const claimReward = () => {
+    if (type === "Wind") {
+      wind.methods._cashoutNodeReward(account, creationTime).send({ from: account })
+        .then(() => {
+          notify("Rewards claimed!", "Check your wallet for your rewards!", "info");
+        })
+        .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    }
   }
 
   return <React.Fragment>
@@ -84,11 +159,11 @@ const NodeItem = ({ type, name, rewards, generatorScreen }) => {
         <span className={`${nameColor} text-truncate`}>{name}</span>
       </div>
       <div className={`${rewardGrid} d-flex align-items-center flex-wrap`}>
-        <span className="cl-white-80 me-2">{(parseFloat(rewards) / ETHUnit).toFixed(3)}</span>
-        {rewards === 0 ? (
+        <span className="cl-white-80 me-2">{reward.toFixed(6)}</span>
+        {reward === 0 ? (
           <button type='button' className='dark-btn-sm cl-orange-gd fw-bold' disabled={true}>{btnTitle}</button>
         ) : (
-          <button type='button' className='dark-btn-sm cl-orange-gd fw-bold'>{btnTitle}</button>
+          <button type='button' className='dark-btn-sm cl-orange-gd fw-bold' onClick={claimReward}>{btnTitle}</button>
         )}
       </div>
     </div>
@@ -101,7 +176,8 @@ NodeItem.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    generatorScreen: state.generatorScreen
+    generatorScreen: state.generatorScreen,
+    account: state.account.myAccount,
   }
 }
 
