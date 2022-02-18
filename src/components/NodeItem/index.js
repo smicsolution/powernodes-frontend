@@ -8,7 +8,7 @@ import './style.css'
 import tierABI from '../../constants/ABI/tier.json';
 import tierNodeABI from '../../constants/ABI/node.json';
 import tokenABI from '../../constants/ABI/token.json';
-import { tierAddr, tierNode, tokenAddr, ftmAddr, usdtAddr, ftm_usdt_lp, ftm_power_lp } from '../../constants/Addresses';
+import { tierAddr, tierNode, nodeManagerAddr, tokenAddr, ftmAddr, usdtAddr, ftm_usdt_lp, ftm_power_lp } from '../../constants/Addresses';
 import isEmpty from '../../utils/is-empty';
 import notify from '../../utils/notify';
 
@@ -24,6 +24,7 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
   const [nameGrid, setNameGrid] = useState("col-4");
   const [rewardGrid, setRewardGrid] = useState("col-4");
 
+  const [node, setNode] = useState(undefined);
   const [wind, setWind] = useState(undefined);
   const [hydro, setHydro] = useState(undefined);
   const [solar, setSolar] = useState(undefined);
@@ -79,6 +80,7 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
 
   useEffect(() => {
     if (isEmpty(library) || isEmpty(account)) {
+      setNode(undefined);
       setWind(undefined);
       setHydro(undefined);
       setSolar(undefined);
@@ -86,11 +88,13 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
       return;
     }
 
+    const _node = new library.eth.Contract(tierNodeABI, nodeManagerAddr);
     const _wind = new library.eth.Contract(tierNodeABI, tierNode.wind);
     const _hydro = new library.eth.Contract(tierNodeABI, tierNode.hydro);
     const _solar = new library.eth.Contract(tierNodeABI, tierNode.solar);
     const _nuclear = new library.eth.Contract(tierNodeABI, tierNode.nuclear);
 
+    setNode(_node);
     setWind(_wind);
     setHydro(_hydro);
     setSolar(_solar);

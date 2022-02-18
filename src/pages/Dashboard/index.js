@@ -10,7 +10,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import tierABI from '../../constants/ABI/tier.json';
 import tierNodeABI from '../../constants/ABI/node.json';
 import tokenABI from '../../constants/ABI/token.json';
-import { tierAddr, tierNode, tokenAddr, ftmAddr, usdtAddr, ftm_usdt_lp, ftm_power_lp } from '../../constants/Addresses';
+import { tierAddr, tierNode, tokenAddr, nodeManagerAddr, ftmAddr, usdtAddr, ftm_usdt_lp, ftm_power_lp } from '../../constants/Addresses';
 
 import './style.css'
 
@@ -156,6 +156,7 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   const [rewardGrid, setRewardGrid] = useState("col-4");
 
   const [token, setToken] = useState(undefined);
+  const [node, setNode] = useState(undefined);
   const [tier, setTier] = useState(undefined);
   const [wind, setWind] = useState(undefined);
   const [hydro, setHydro] = useState(undefined);
@@ -202,6 +203,7 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   useEffect(() => {
     if (isEmpty(library) || isEmpty(account)) {
       setToken(undefined);
+      setNode(undefined);
       setFTM(undefined);
       setUSDT(undefined);
       setTier(undefined);
@@ -213,6 +215,7 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
     }
 
     const _token = new library.eth.Contract(tokenABI, tokenAddr);
+    const _node = new library.eth.Contract(tierNodeABI, nodeManagerAddr);
     const _ftm = new library.eth.Contract(tokenABI, ftmAddr);
     const _usdt = new library.eth.Contract(tokenABI, usdtAddr);
     const _tier = new library.eth.Contract(tierABI, tierAddr);
@@ -222,6 +225,7 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
     const _nuclear = new library.eth.Contract(tierNodeABI, tierNode.nuclear);
 
     setToken(_token);
+    setNode(_node);
     setFTM(_ftm);
     setUSDT(_usdt);
     setTier(_tier);
@@ -667,11 +671,37 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   }
 
   const claimAllRewards = () => {
-    tier.methods.cashoutAllTiers().send({ from: account })
-      .then(() => {
-        notify("Rewards claimed!", "Check your wallet for your rewards!", "info");
-      })
-      .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    // tier.methods.cashoutAllTiers().send({ from: account })
+    //   .then(() => {
+    //     notify("Rewards claimed!", "Check your wallet for your rewards!", "info");
+    //   })
+    //   .catch(err => console.log({ "Claim Rewards Error: ": err }));
+
+    if (windReward !== 0) {
+      tier.methods.cashoutAll("FLATVERSAL").send({ from: account })
+        .then(() => {
+          notify("Wind Rewards claimed!", "Check your wallet for your rewards!", "info");
+        })
+        .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    } else if (hydroReward !== 0) {
+      tier.methods.cashoutAll("MICROSCOPIC").send({ from: account })
+        .then(() => {
+          notify("Hydro Rewards claimed!", "Check your wallet for your rewards!", "info");
+        })
+        .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    } else if (solarReward !== 0) {
+      tier.methods.cashoutAll("HUMAN").send({ from: account })
+        .then(() => {
+          notify("Solar Rewards claimed!", "Check your wallet for your rewards!", "info");
+        })
+        .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    } else if (nuclearReward !== 0) {
+      tier.methods.cashoutAll("SUPERHUMAN").send({ from: account })
+        .then(() => {
+          notify("Nuclear Rewards claimed!", "Check your wallet for your rewards!", "info");
+        })
+        .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    }
   }
 
   const inputNodeName = e => {
