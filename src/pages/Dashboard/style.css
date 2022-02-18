@@ -53,7 +53,7 @@
   box-sizing: border-box;
   box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 0.2rem 1rem;
 }
 
 .solar-card {
@@ -62,7 +62,7 @@
   box-sizing: border-box;
   box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 0.2rem 1rem;
 }
 
 .hydro-card {
@@ -71,7 +71,7 @@
   box-sizing: border-box;
   box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 0.2rem 1rem;
 }
 
 .wind-card {
@@ -80,7 +80,7 @@
   box-sizing: border-box;
   box-shadow: 9px 9px 16px rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 0.2rem 1rem;
 }
 
 .wind-card:hover {

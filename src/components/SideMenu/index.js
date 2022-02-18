@@ -106,6 +106,8 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header, setSidebarHeig
           </Menu>
         </SidebarContent>
 
+        {menuCollapse ? null : (<div className="sidebar-space"></div>)}
+
         <SidebarHeader className='sidebar-header'>
           <p className='mb-0'>{menuCollapse ? "" : "UOT MEMBERS"}</p>
         </SidebarHeader>
