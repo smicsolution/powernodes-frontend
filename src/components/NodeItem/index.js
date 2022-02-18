@@ -24,6 +24,8 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
   const [nameGrid, setNameGrid] = useState("col-4");
   const [rewardGrid, setRewardGrid] = useState("col-4");
 
+  const [tier, setTier] = useState(undefined);
+  const [token, setToken] = useState(undefined);
   const [node, setNode] = useState(undefined);
   const [wind, setWind] = useState(undefined);
   const [hydro, setHydro] = useState(undefined);
@@ -80,6 +82,8 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
 
   useEffect(() => {
     if (isEmpty(library) || isEmpty(account)) {
+      setTier(undefined);
+      setToken(undefined);
       setNode(undefined);
       setWind(undefined);
       setHydro(undefined);
@@ -88,12 +92,16 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
       return;
     }
 
+    const _tier = new library.eth.Contract(tierABI, tierAddr);
+    const _token = new library.eth.Contract(tokenABI, tokenAddr);
     const _node = new library.eth.Contract(tierNodeABI, nodeManagerAddr);
     const _wind = new library.eth.Contract(tierNodeABI, tierNode.wind);
     const _hydro = new library.eth.Contract(tierNodeABI, tierNode.hydro);
     const _solar = new library.eth.Contract(tierNodeABI, tierNode.solar);
     const _nuclear = new library.eth.Contract(tierNodeABI, tierNode.nuclear);
 
+    setTier(_tier);
+    setToken(_token);
     setNode(_node);
     setWind(_wind);
     setHydro(_hydro);
@@ -143,7 +151,25 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
 
   const claimReward = () => {
     if (type === "Wind") {
-      wind.methods._cashoutNodeReward(account, creationTime).send({ from: account })
+      tier.methods.cashoutReward(Number(creationTime), "FLATVERSAL").send({ from: account })
+        .then(() => {
+          notify("Rewards claimed!", "Check your wallet for your rewards!", "info");
+        })
+        .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    } else if (type === "Hydro") {
+      tier.methods.cashoutReward(Number(creationTime), "MICROSCOPIC").send({ from: account })
+        .then(() => {
+          notify("Rewards claimed!", "Check your wallet for your rewards!", "info");
+        })
+        .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    } else if (type === "Solar") {
+      tier.methods.cashoutReward(Number(creationTime), "HUMAN").send({ from: account })
+        .then(() => {
+          notify("Rewards claimed!", "Check your wallet for your rewards!", "info");
+        })
+        .catch(err => console.log({ "Claim Rewards Error: ": err }));
+    } else if (type === "Nuclear") {
+      tier.methods.cashoutReward(Number(creationTime), "SUPERHUMAN").send({ from: account })
         .then(() => {
           notify("Rewards claimed!", "Check your wallet for your rewards!", "info");
         })
