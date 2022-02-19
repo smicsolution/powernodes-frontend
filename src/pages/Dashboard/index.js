@@ -473,7 +473,7 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   useEffect(() => {
     setGeneratorWidth(width);
 
-    if (width > 430) {
+    if (width > 420) {
       setLeftField("ps-0 pe-2");
       setRightField("pe-0 ps-2");
       setNodeItemClass("col-6");
@@ -712,41 +712,76 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   }
 
   const compoundReward = () => {
+    let selectedTierName;
     let tierName;
-    // let isGod = false;
-    const userNodes = nuclearNode.concat(solarNode).concat(hydroNode).concat(windNode);
+    let isGod = false;
 
-    const index = userNodes.findIndex(node => {
-      return node.name == nodeName;
-    });
-
-    if (index === -1) {
-      notify("Invalid name", "The node name don't exist", "warning");
-      return;
+    if (!isEmpty(windNode)) {
+      const index = windNode.findIndex((item) => {
+        return item.name == nodeName;
+      })
+      if (index !== -1) {
+        notify("Invalid node's name!", "The name already exists in Wind", "warning");
+        return;
+      } else {
+        tierName = "FLATVERSAL";
+      }
+    }
+    if (!isEmpty(hydroNode)) {
+      const index = hydroNode.findIndex((item) => {
+        return item.name == nodeName;
+      })
+      if (index !== -1) {
+        notify("Invalid node's name!", "The name already exists in Hydro", "warning");
+        return;
+      } else {
+        tierName = "MICROSCOPIC";
+      }
+    }
+    if (!isEmpty(solarNode)) {
+      const index = solarNode.findIndex((item) => {
+        return item.name == nodeName;
+      })
+      if (index !== -1) {
+        notify("Invalid node's name!", "The name already exists in Solar", "warning");
+        return;
+      } else {
+        tierName = "HUMAN";
+      }
+    }
+    if (!isEmpty(nuclearNode)) {
+      const index = nuclearNode.findIndex((item) => {
+        return item.name == nodeName;
+      })
+      if (index !== -1) {
+        notify("Invalid node's name!", "The name already exists in Nuclear", "warning");
+        return;
+      } else {
+        tierName = "SUPERHUMAN";
+      }
     }
 
-    // if (selectedNode === "Wind" && userWind !== 0) isGod = true;
-    // else if (selectedNode === "Hydro" && userHydro !== 0) isGod = true;
-    // else if (selectedNode === "Solar" && userSolar !== 0) isGod = true;
-    // else if (selectedNode === "Nuclear" && userNuclear !== 0) isGod = true;
+    if (userWind !== 0 && userHydro !== 0 && userSolar !== 0 && userNuclear !== 0) {
+      isGod = true;
+    }
 
     if (selectedNode === "Wind")
-      tierName = "FLATVERSAL";
+      selectedTierName = "FLATVERSAL";
     else if (selectedNode === "Hydro")
-      tierName = "MICROSCOPIC";
+      selectedTierName = "MICROSCOPIC";
     else if (selectedNode === "Solar")
-      tierName = "HUMAN";
+      selectedTierName = "HUMAN";
     else if (selectedNode === "Nuclear")
-      tierName = "SUPERHUMAN";
+      selectedTierName = "SUPERHUMAN";
 
-    if (userWind !== 0 && userHydro !== 0 && userSolar !== 0 && userNuclear !== 0) {
+    if (!isGod) {
       tier.methods.compoundTierInto(tierName, tierName, nodeName).send({ from: account })
         .then(() => {
           notify("Successfully Compounded!", "New Node Compounded", "success");
         })
         .catch(err => console.log({ "Reward Compound Error: ": err }));
     } else {
-      tier.methods.compoundInto(tierName, nodeName).send({ from: account })
+      tier.methods.compoundInto(selectedTierName, nodeName).send({ from: account })
         .then(() => {
           notify("New Node Compounded!", "New Node Compounded", "success");
         })
