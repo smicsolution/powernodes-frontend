@@ -1,21 +1,21 @@
-.fade {
+/* .fade {
   background-color: transparent;
-}
+} */
 
-.modal {
+.wallet-modal.modal {
   top: 5rem;
 }
 
-.modal-dialog {
+.wallet-modal .modal-dialog {
   display: flex;
   justify-content: center;
 }
 
-.modal-content {
+.wallet-modal .modal-content {
   background-color: transparent;
-  width: 50vw;
+  /* width: 50vw;
   max-width: 900px;
-  min-width: 300px;
+  min-width: 300px; */
 }
 
 .select-wallet {

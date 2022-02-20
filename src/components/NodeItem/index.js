@@ -9,12 +9,16 @@ import tierABI from '../../constants/ABI/tier.json';
 import tierNodeABI from '../../constants/ABI/node.json';
 import tokenABI from '../../constants/ABI/token.json';
 import { tierAddr, tierNode, nodeManagerAddr, tokenAddr, ftmAddr, usdtAddr, ftm_usdt_lp, ftm_power_lp } from '../../constants/Addresses';
+
+import { getRPC } from '../../redux/actions/rpc'
+import { showRPCModal } from '../../redux/actions/modal'
+
 import isEmpty from '../../utils/is-empty';
 import notify from '../../utils/notify';
 
 const ETHUnit = 1e18;
 
-const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
+const NodeItem = ({ type, name, creationTime, generatorScreen, account, getRPC, showRPCModal }) => {
   const { library } = useWeb3React();
   let nameColor;
 
@@ -139,6 +143,10 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
     return () => clearInterval(itv);
   }, [wind, hydro, solar, nuclear, account])
 
+  useEffect(() => {
+    getRPC(account);
+  }, [])
+
   if (type === "Nuclear") {
     nameColor = "cl-nuclear";
   } else if (type === "Solar") {
@@ -177,9 +185,27 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
     }
   }
 
+  const onClickRPC = () => {
+    let tierName;
+
+    if (type === "Wind") {
+      tierName = "FLATVERSAL";
+    } else if (type === "Hydro") {
+      tierName = "MICROSCOPIC";
+    } else if (type === "Solar") {
+      tierName = "HUMAN";
+    } else if (type === "Nuclear") {
+      tierName = "SUPERHUMAN";
+    }
+
+    const checksum = `${name}${creationTime}${tierName}`;
+
+    showRPCModal(type, checksum);
+  }
+
   return <React.Fragment>
-    <div className="row border-top mx-0 mt-1 py-1">
-      <div className={`${rpcGrid} d-flex align-items-center`}>
+    <div className="row border-top mx-0 mt-1 py-1 node-item">
+      <div className={`${rpcGrid} d-flex align-items-center rpc-img`} onClick={onClickRPC}>
         <img src="assets/img/icons/fantom.png" alt="fantom" className='icon-size' />
       </div>
       <div className={`${typeGrid} d-flex align-items-center`}>
@@ -201,6 +227,8 @@ const NodeItem = ({ type, name, creationTime, generatorScreen, account }) => {
 }
 
 NodeItem.propTypes = {
+  showRPCModal: PropTypes.func.isRequired,
+  getRPC: PropTypes.func.isRequired,
   generatorScreen: PropTypes.object.isRequired
 }
 
@@ -211,4 +239,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(NodeItem);
+export default connect(mapStateToProps, { getRPC, showRPCModal })(NodeItem);

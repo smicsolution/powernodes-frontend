@@ -13,6 +13,7 @@ import Header from './components/Header';
 // import Farms from './pages/Farms';
 // import SideMenu from './components/SideMenu';
 import MainLayout from './layout';
+import RPCModal from './components/RPCModal'
 
 const App = ({ sidebar, header }) => {
   const [showButton, setShowButton] = useState(false);
@@ -56,6 +57,7 @@ const App = ({ sidebar, header }) => {
           closeButton={null}
           style={{ top: '100px' }}
         />
+        <RPCModal />
       </div>
     </React.Fragment>
   );

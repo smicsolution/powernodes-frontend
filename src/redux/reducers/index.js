@@ -8,6 +8,7 @@ import sidebar from './sidebarHeight'
 import screen from './screen'
 import contentScreen from './contentScreen'
 import generatorScreen from './generatorScreen'
+import rpc from './rpc'
 
 export default combineReducers({
   modal,
@@ -17,5 +18,6 @@ export default combineReducers({
   sidebar,
   screen,
   contentScreen,
-  generatorScreen
+  generatorScreen,
+  rpc
 });

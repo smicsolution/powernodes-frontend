@@ -1,5 +1,8 @@
-/* @media only screen and (max-width: 576px) {
-  .rpc-item {
-    display: none!important;
-  }
-} */
+.rpc-img:hover {
+  cursor: pointer;
+}
+
+.node-item:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 1.2rem;
+}

@@ -1,5 +1,7 @@
 export const SHOW_WALLET_MODAL = "SHOW_WALLET_MODAL";
 export const HIDE_WALLET_MODAL = "HIDE_WALLET_MODAL";
+export const HIDE_RPC_MODAL = "HIDE_RPC_MODAL";
+export const SHOW_RPC_MODAL = "SHOW_RPC_MODAL";
 export const SHOW_SIDEMENU = "SHOW_SIDEMENU";
 export const HIDE_SIDEMENU = "HIDE_SIDEMENU";
 export const SET_HEADER_HEIGHT = "SET_HEADER_HEIGHT";
@@ -8,3 +10,4 @@ export const SET_ACCOUNT = "SET_ACCOUNT";
 export const SET_WIDTH = "SET_WIDTH";
 export const SET_CONTENT_WIDTH = "SET_CONTENT_WIDTH";
 export const SET_GENERATOR_WIDTH = "SET_GENERATOR_WIDTH";
+export const GET_RPC = "GET_RPC";

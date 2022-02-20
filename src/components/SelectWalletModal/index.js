@@ -8,7 +8,7 @@ import { hideWalletModal } from '../../redux/actions/modal'
 import './style.css'
 
 const SelectWalletModal = ({ modal, hideWalletModal, connectMetaMask, disconnectMetaMask }) => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     setShow(modal.isVisibleWallet)
@@ -23,6 +23,7 @@ const SelectWalletModal = ({ modal, hideWalletModal, connectMetaMask, disconnect
       show={show}
       onHide={handleClose}
       keyboard={true}
+      className="wallet-modal"
     >
       <div className='select-wallet'>
         <p className="text-center cl-orange fw-bold">Selec your wallet</p>
