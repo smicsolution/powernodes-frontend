@@ -88,7 +88,10 @@ const SideMenu = ({ sidemenu, hideSideMenu, showSideMenu, header, setSidebarHeig
               <a href="https://treasury.powernode.io/" target="_self" />
             </MenuItem>
             <MenuItem icon={<MdTimeline />}>White Paper</MenuItem>
-            <MenuItem icon={<IoShareSocialOutline />}>Social Feeds</MenuItem>
+            <MenuItem icon={<IoShareSocialOutline />}>
+              Social Feeds
+              <a href="https://twitter.com/Powernodes_add" target="_blank" />
+            </MenuItem>
           </Menu>
         </SidebarContent>
 

@@ -107,7 +107,7 @@ const Farms = ({ account, contentScreen }) => {
 
           <div>
             <p className="mb-0 cl-fantom-gd fw-bold fs-1">$36874 TVL</p>
-            <p className="mb-0 cl-white-80">Deposit wFTM, earn Energy</p>
+            <p className="mb-0 cl-white-80">Deposit ETH, earn Energy</p>
           </div>
           <div className="text-center mt-2">
             <button type='button' className='dark-btn-farms cl-orange-gd fw-bold'>Select Ethereum Pool</button>
@@ -120,14 +120,14 @@ const Farms = ({ account, contentScreen }) => {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
               <img src="assets/img/icons/yfi.png" alt="yfi" className='farms-icon-size me-2' />
-              <span className='cl-fantom-gd fw-bold fs-5'>ETH Pool</span>
+              <span className='cl-fantom-gd fw-bold fs-5'>YFI Pool</span>
             </div>
             <span className="cl-white-80">2x Multiplier</span>
           </div>
 
           <div>
             <p className="mb-0 cl-fantom-gd fw-bold fs-1">$36874 TVL</p>
-            <p className="mb-0 cl-white-80">Deposit wFTM, earn Energy</p>
+            <p className="mb-0 cl-white-80">Deposit YFI, earn Energy</p>
           </div>
           <div className="text-center mt-2">
             <button type='button' className='dark-btn-farms cl-orange-gd fw-bold'>Select YFI Pool</button>
@@ -140,14 +140,14 @@ const Farms = ({ account, contentScreen }) => {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
               <img src="assets/img/icons/usdc.png" alt="usdc" className='farms-icon-size me-2' />
-              <span className='cl-fantom-gd fw-bold fs-5'>ETH Pool</span>
+              <span className='cl-fantom-gd fw-bold fs-5'>USDC Pool</span>
             </div>
             <span className="cl-white-80">2x Multiplier</span>
           </div>
 
           <div>
             <p className="mb-0 cl-fantom-gd fw-bold fs-1">$36874 TVL</p>
-            <p className="mb-0 cl-white-80">Deposit wFTM, earn Energy</p>
+            <p className="mb-0 cl-white-80">Deposit USDC, earn Energy</p>
           </div>
           <div className="text-center mt-2">
             <button type='button' className='dark-btn-farms cl-orange-gd fw-bold'>Select USDC Pool</button>
@@ -167,7 +167,7 @@ const Farms = ({ account, contentScreen }) => {
 
           <div>
             <p className="mb-0 cl-purple-gd fw-bold fs-1">$36874 TVL</p>
-            <p className="mb-0 cl-white-80">Deposit wFTM, earn Energy</p>
+            <p className="mb-0 cl-white-80">Deposit MIM, earn Energy</p>
           </div>
           <div className="text-center mt-2">
             <button type='button' className='dark-btn-farms cl-orange-gd fw-bold'>Select MIM Pool</button>
@@ -187,7 +187,7 @@ const Farms = ({ account, contentScreen }) => {
 
           <div>
             <p className="mb-0 cl-orange-gd fw-bold fs-1">$36874 TVL</p>
-            <p className="mb-0 cl-white-80">Deposit wFTM, earn Energy</p>
+            <p className="mb-0 cl-white-80">Deposit Power, earn Energy</p>
           </div>
           <div className="text-center mt-2">
             <button type='button' className='dark-btn-farms cl-orange-gd fw-bold'>Select Power Pool</button>
@@ -207,7 +207,7 @@ const Farms = ({ account, contentScreen }) => {
 
           <div>
             <p className="mb-0 cl-orange-gd fw-bold fs-1">$36874 TVL</p>
-            <p className="mb-0 cl-white-80">Deposit wFTM, earn Energy</p>
+            <p className="mb-0 cl-white-80">Deposit wFTM-Energy LP, earn Energy</p>
           </div>
           <div className="text-center mt-2">
             <button type='button' className='dark-btn-farms cl-orange-gd fw-bold'>Select wFTM-Energy LP</button>
