@@ -712,9 +712,15 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   }
 
   const compoundReward = () => {
-    let selectedTierName;
-    let tierName;
+    let id = 0;
+    let selectedTierName = "";
     let isGod = false;
+    const nameLength = nodeName.length;
+
+    if (nameLength < 3 || nameLength > 12) {
+      notify("Invalid node's name!", "Node's name must be between 3 and 12", "warning");
+      return;
+    }
 
     if (!isEmpty(windNode)) {
       const index = windNode.findIndex((item) => {
@@ -723,8 +729,6 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
       if (index !== -1) {
         notify("Invalid node's name!", "The name already exists in Wind", "warning");
         return;
-      } else {
-        tierName = "FLATVERSAL";
       }
     }
     if (!isEmpty(hydroNode)) {
@@ -734,8 +738,6 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
       if (index !== -1) {
         notify("Invalid node's name!", "The name already exists in Hydro", "warning");
         return;
-      } else {
-        tierName = "MICROSCOPIC";
       }
     }
     if (!isEmpty(solarNode)) {
@@ -745,8 +747,6 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
       if (index !== -1) {
         notify("Invalid node's name!", "The name already exists in Solar", "warning");
         return;
-      } else {
-        tierName = "HUMAN";
       }
     }
     if (!isEmpty(nuclearNode)) {
@@ -756,8 +756,6 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
       if (index !== -1) {
         notify("Invalid node's name!", "The name already exists in Nuclear", "warning");
         return;
-      } else {
-        tierName = "SUPERHUMAN";
       }
     }
 
@@ -765,25 +763,37 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
       isGod = true;
     }
 
-    if (selectedNode === "Wind")
+    if (selectedNode === 'Wind') {
+      id = 0;
       selectedTierName = "FLATVERSAL";
-    else if (selectedNode === "Hydro")
+    } else if (selectedNode === 'Hydro') {
+      id = 1;
       selectedTierName = "MICROSCOPIC";
-    else if (selectedNode === "Solar")
+    } else if (selectedNode === 'Solar') {
+      id = 2;
       selectedTierName = "HUMAN";
-    else if (selectedNode === "Nuclear")
+    } else if (selectedNode === 'Nuclear') {
+      id = 3;
       selectedTierName = "SUPERHUMAN";
+    }
+
+    if (balance < nodePrice[id]) {
+      notify("Insufficient balance!", "Please buy $Power", "warning");
+      return;
+    }
 
     if (!isGod) {
-      tier.methods.compoundTierInto(tierName, tierName, nodeName).send({ from: account })
+      tier.methods.compoundTierInto(selectedTierName, selectedTierName, nodeName).send({ from: account })
         .then(() => {
           notify("Successfully Compounded!", "New Node Compounded", "success");
+          setNodeName("");
         })
         .catch(err => console.log({ "Reward Compound Error: ": err }));
     } else {
       tier.methods.compoundInto(selectedTierName, nodeName).send({ from: account })
         .then(() => {
-          notify("New Node Compounded!", "New Node Compounded", "success");
+          notify("Successfully Compounded!", "New Node Compounded", "success");
+          setNodeName("");
         })
         .catch(err => console.log({ "Reward Compound Error: ": err }));
     }
