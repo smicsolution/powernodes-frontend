@@ -1054,9 +1054,15 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
               )}
 
               {approved ? (
-                <button type='button' className='orange-btn px-3 my-2' onClick={compoundReward}>
-                  <span className='cl-black fw-bold'>Compound Rewards</span>
-                </button>
+                (userWind + userHydro + userSolar + userNuclear) === 0 ? (
+                  <button type='button' className='orange-btn px-3 my-2' disabled={true}>
+                    <span className='cl-black fw-bold'>Compound Rewards</span>
+                  </button>
+                ) : (
+                  <button type='button' className='orange-btn px-3 my-2' onClick={compoundReward}>
+                    <span className='cl-black fw-bold'>Compound Rewards</span>
+                  </button>
+                )
               ) : (
                 <button type='button' className='orange-btn px-3 my-2' disabled={true}>
                   <span className='cl-black fw-bold'>Compound Rewards</span>
