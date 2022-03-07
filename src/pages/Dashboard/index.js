@@ -313,7 +313,7 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
     }
 
     const itv = setInterval(() => {
-      token.methods.allowance(account, tokenAddr).call().then((_approved) => {
+      token.methods.allowance(account, tierAddr).call().then((_approved) => {
         if (_approved == '0') setApproved(false);
         else setApproved(true);
       })
@@ -585,7 +585,7 @@ const Dashboard = ({ account, contentScreen, setGeneratorWidth }) => {
   }
 
   const approve = () => {
-    token.methods.approve(tokenAddr, MaxUint256).send({ from: account }).then(() => {
+    token.methods.approve(tierAddr, MaxUint256).send({ from: account }).then(() => {
       notify("Approved Successfully!", "Please create a new node", "success");
     })
   }
